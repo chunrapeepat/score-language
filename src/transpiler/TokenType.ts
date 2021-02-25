@@ -1,0 +1,51 @@
+export enum TokenType {
+  // One or two character tokens.
+  LEFT_PAREN,
+  RIGHT_PAREN,
+  LEFT_BRACKET,
+  RIGHT_BRACKET,
+  MINUS,
+  PLUS,
+  SLASH,
+  STAR,
+  NEWLINE,
+  BANG,
+  BANG_EQUAL,
+  EQUAL,
+  EQUAL_EQUAL,
+  GREATER,
+  GREATER_EQUAL,
+  LESS,
+  LESS_EQUAL,
+
+  // Literals.
+  IDENTIFIER,
+  STRING,
+  NUMBER,
+
+  // Keywords.
+  AND,
+  OR,
+  MOD,
+  NOT,
+  TRUE,
+  FALSE,
+  NULL,
+  TYPE_NUMBER,
+  TYPE_STRING,
+  TYPE_BOOLEAN,
+  EOF,
+
+  // Statements
+  PRINT,
+  VAR,
+  SET,
+  SAY,
+  WAIT,
+  PLAY,
+  IF,
+  THEN,
+  END,
+  ELSE,
+  WHILE,
+}
