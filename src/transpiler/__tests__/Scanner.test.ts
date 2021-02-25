@@ -3,6 +3,26 @@ import { Token } from "../Token";
 import { TokenType } from "../TokenType";
 
 describe("scanner should return a list of token correctly with EOF at the end", () => {
+  test("keywords", () => {
+    const input = `and or mod not true false null number string boolean`;
+    const expectedOutput = [
+      new Token(TokenType.AND, "and", null, 1),
+      new Token(TokenType.OR, "or", null, 1),
+      new Token(TokenType.MOD, "mod", null, 1),
+      new Token(TokenType.NOT, "not", null, 1),
+      new Token(TokenType.TRUE, "true", null, 1),
+      new Token(TokenType.FALSE, "false", null, 1),
+      new Token(TokenType.NULL, "null", null, 1),
+      new Token(TokenType.TYPE_NUMBER, "number", null, 1),
+      new Token(TokenType.TYPE_STRING, "string", null, 1),
+      new Token(TokenType.TYPE_BOOLEAN, "boolean", null, 1),
+      new Token(TokenType.EOF, "", null, 1),
+    ];
+
+    const scanner = new Scanner(input);
+    expect(scanner.scanTokens()).toEqual(expectedOutput);
+  });
+
   test("new line", () => {
     const input = `"line 1"\n"line 2"`;
     const expectedOutput = [
