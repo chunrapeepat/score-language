@@ -1,9 +1,11 @@
 import { Token } from "./Token";
 import { TokenType } from "./TokenType";
+import { UnexpectedToken, CompilationErrorInterface } from "./Error";
 
 export class Scanner {
   private readonly source: string;
   private readonly tokens: Token[] = [];
+  private readonly errors: CompilationErrorInterface[] = [];
 
   private start: number = 0;
   private current: number = 0;
@@ -19,8 +21,16 @@ export class Scanner {
       this.scanToken();
     }
 
+    if (this.errors.length > 0) {
+      throw new Error("failed to scan tokens");
+    }
+
     this.tokens.push(new Token(TokenType.EOF, "", null, this.line));
     return this.tokens;
+  }
+
+  getErrors() {
+    return this.errors;
   }
 
   private scanToken() {
@@ -90,8 +100,7 @@ export class Scanner {
         } else if (this.isAlpha(c)) {
           this.identifier();
         } else {
-          // TODO: Handle error
-          // throw new Error(`unexpected character ${c}`);
+          this.errors.push(new UnexpectedToken(c, this.line));
         }
         break;
     }

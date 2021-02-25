@@ -1,6 +1,23 @@
+import { UnexpectedToken } from "../Error";
 import { Scanner } from "../Scanner";
 import { Token } from "../Token";
 import { TokenType } from "../TokenType";
+
+describe("scanner should throw error", () => {
+  test("unexpected token error", () => {
+    const input = `name = . ;`;
+
+    const scanner = new Scanner(input);
+    expect(() => scanner.scanTokens()).toThrow(Error);
+    expect(scanner.getErrors().length).toBe(2);
+    expect(scanner.getErrors()[0]).toBeInstanceOf(UnexpectedToken);
+    expect(scanner.getErrors()[1]).toBeInstanceOf(UnexpectedToken);
+    expect(scanner.getErrors()[0].getLine()).toBe(1);
+    expect(scanner.getErrors()[0].getLexeme()).toBe(".");
+    expect(scanner.getErrors()[1].getLine()).toBe(1);
+    expect(scanner.getErrors()[1].getLexeme()).toBe(";");
+  });
+});
 
 describe("scanner should return a list of token correctly with EOF at the end", () => {
   test("logical operators", () => {
