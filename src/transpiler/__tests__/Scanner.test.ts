@@ -3,6 +3,19 @@ import { Token } from "../Token";
 import { TokenType } from "../TokenType";
 
 describe("scanner should return a list of token correctly with EOF at the end", () => {
+  test("new line", () => {
+    const input = `"line 1"\n"line 2"`;
+    const expectedOutput = [
+      new Token(TokenType.STRING, '"line 1"', "line 1", 1),
+      new Token(TokenType.NEWLINE, "\n", null, 1),
+      new Token(TokenType.STRING, '"line 2"', "line 2", 2),
+      new Token(TokenType.EOF, "", null, 2),
+    ];
+
+    const scanner = new Scanner(input);
+    expect(scanner.scanTokens()).toEqual(expectedOutput);
+  });
+
   test("literals", () => {
     const input = `"this is a string" 30.1235 500 varName true false null`;
     const expectedOutput = [
