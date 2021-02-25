@@ -49,7 +49,7 @@ export class Scanner {
         break;
 
       case "!":
-        this.addToken(this.match("=") ? TokenType.BANG_EQUAL : TokenType.BANG);
+        this.addToken(this.match("=") ? TokenType.BANG_EQUAL : TokenType.NOT);
         break;
       case "=":
         this.addToken(

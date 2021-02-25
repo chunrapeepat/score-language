@@ -3,6 +3,25 @@ import { Token } from "../Token";
 import { TokenType } from "../TokenType";
 
 describe("scanner should return a list of token correctly with EOF at the end", () => {
+  test("logical operators", () => {
+    const input = `! not != = == > >= < <=`;
+    const expectedOutput = [
+      new Token(TokenType.NOT, "!", null, 1),
+      new Token(TokenType.NOT, "not", null, 1),
+      new Token(TokenType.BANG_EQUAL, "!=", null, 1),
+      new Token(TokenType.EQUAL, "=", null, 1),
+      new Token(TokenType.EQUAL_EQUAL, "==", null, 1),
+      new Token(TokenType.GREATER, ">", null, 1),
+      new Token(TokenType.GREATER_EQUAL, ">=", null, 1),
+      new Token(TokenType.LESS, "<", null, 1),
+      new Token(TokenType.LESS_EQUAL, "<=", null, 1),
+      new Token(TokenType.EOF, "", null, 1),
+    ];
+
+    const scanner = new Scanner(input);
+    expect(scanner.scanTokens()).toEqual(expectedOutput);
+  });
+
   test("keywords", () => {
     const input = `and or mod not true false null number string boolean`;
     const expectedOutput = [

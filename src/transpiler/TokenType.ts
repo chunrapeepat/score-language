@@ -9,7 +9,6 @@ export enum TokenType {
   SLASH,
   STAR,
   NEWLINE,
-  BANG,
   BANG_EQUAL,
   EQUAL,
   EQUAL_EQUAL,
