@@ -3,6 +3,7 @@ const types = [
   "Grouping | expression: Expr",
   "Literal | value: any",
   "Unary | operator: Token, right: Expr",
+  "ExplicitType | type: TokenType",
 ];
 
 function defineAst(baseName, types) {
@@ -44,5 +45,6 @@ function defineType(baseName, type) {
   }\n\n`);
 }
 
-console.log(`import { Token } from "./Token";\n`);
+console.log(`import { Token } from "./Token";
+import { TokenType } from "./TokenType";`);
 defineAst("Expr", types);

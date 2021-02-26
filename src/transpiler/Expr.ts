@@ -1,10 +1,11 @@
 import { Token } from "./Token";
-
+import { TokenType } from "./TokenType";
 export interface ExprVisitor<R> {
   visitBinaryExpr(expr: Binary): R;
   visitGroupingExpr(expr: Grouping): R;
   visitLiteralExpr(expr: Literal): R;
   visitUnaryExpr(expr: Unary): R;
+  visitExplicitTypeExpr(expr: ExplicitType): R;
 }
 export interface Expr {
   accept<R>(visitor: ExprVisitor<R>): R;
@@ -61,5 +62,17 @@ export class Unary implements Expr {
 
   accept<R>(visitor: ExprVisitor<R>): R {
     return visitor.visitUnaryExpr(this);
+  }
+}
+
+export class ExplicitType implements Expr {
+  readonly type: TokenType;
+
+  constructor(type: TokenType) {
+    this.type = type;
+  }
+
+  accept<R>(visitor: ExprVisitor<R>): R {
+    return visitor.visitExplicitTypeExpr(this);
   }
 }
