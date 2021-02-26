@@ -16,6 +16,8 @@ export class Parser {
   parse(): Stmt[] {
     const statements: Stmt[] = [];
     while (!this.isAtEnd()) {
+      if (this.match(TokenType.NEWLINE)) continue;
+
       try {
         statements.push(this.statement());
       } catch (e) {
@@ -35,9 +37,6 @@ export class Parser {
   }
 
   private statement(): Stmt {
-    while (this.peek().type === TokenType.NEWLINE) {
-      this.consume(TokenType.NEWLINE, "");
-    }
     return this.expressionStatement();
   }
 
