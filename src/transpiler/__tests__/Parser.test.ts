@@ -4,6 +4,38 @@ import { Scanner } from "../Scanner";
 import { Expression } from "../Stmt";
 import { Token } from "../Token";
 import { TokenType } from "../TokenType";
+import { SyntaxError } from "../Error";
+
+describe("parse error", () => {
+  test("parser should detect multiple errors", () => {
+    const input = `!-+\n\n(10\n\n+`;
+
+    const scanner = new Scanner(input);
+    const parser = new Parser(scanner.scanTokens());
+    expect(() => parser.parse()).toThrow(Error);
+    expect(parser.getErrors().length).toBe(3);
+  });
+
+  test("parser should detect invalid mathematical expression", () => {
+    const input = `!-+`;
+
+    const scanner = new Scanner(input);
+    const parser = new Parser(scanner.scanTokens());
+    expect(() => parser.parse()).toThrow(Error);
+    expect(parser.getErrors().length).toBe(1);
+    expect(parser.getErrors()[0]).toBeInstanceOf(SyntaxError);
+  });
+
+  test("open-paren must be followed by close-paren within the same line", () => {
+    const input = `(10 + 20`;
+
+    const scanner = new Scanner(input);
+    const parser = new Parser(scanner.scanTokens());
+    expect(() => parser.parse()).toThrow(Error);
+    expect(parser.getErrors().length).toBe(1);
+    expect(parser.getErrors()[0]).toBeInstanceOf(SyntaxError);
+  });
+});
 
 describe("parse statements", () => {
   test("skip new-line statement", () => {

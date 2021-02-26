@@ -22,7 +22,7 @@ export class Scanner {
     }
 
     if (this.errors.length > 0) {
-      throw new Error("failed to scan tokens");
+      throw new Error("failed to scan characters");
     }
 
     // auto insert new-line at the end of file

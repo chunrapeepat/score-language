@@ -2,10 +2,12 @@ import { Binary, Expr, Grouping, Literal, Unary, ExplicitType } from "./Expr";
 import { Stmt, Expression } from "./Stmt";
 import { Token } from "./Token";
 import { TokenType } from "./TokenType";
+import { CompilationErrorInterface, SyntaxError } from "./Error";
 
 export class Parser {
   private readonly tokens: Token[];
   private current: number = 0;
+  private errors: CompilationErrorInterface[] = [];
 
   constructor(tokens: Token[]) {
     this.tokens = tokens;
@@ -14,10 +16,22 @@ export class Parser {
   parse(): Stmt[] {
     const statements: Stmt[] = [];
     while (!this.isAtEnd()) {
-      statements.push(this.statement());
+      try {
+        statements.push(this.statement());
+      } catch (e) {
+        this.errors.push(e);
+      }
+    }
+
+    if (this.errors.length > 0) {
+      throw new Error("failed to parse tokens");
     }
 
     return statements;
+  }
+
+  getErrors(): CompilationErrorInterface[] {
+    return this.errors;
   }
 
   private statement(): Stmt {
@@ -29,7 +43,7 @@ export class Parser {
 
   private expressionStatement(): Stmt {
     const value: Expr = this.expression();
-    this.consume(TokenType.NEWLINE, "Expect 'new line' after value.");
+    this.consume(TokenType.NEWLINE, "expect 'new line' after value.");
     return new Expression(value);
   }
 
@@ -127,23 +141,32 @@ export class Parser {
 
     if (this.match(TokenType.LEFT_PAREN)) {
       const expr = this.expression();
-      this.consume(TokenType.RIGHT_PAREN, "Expect ')' after expression.");
+      this.consume(TokenType.RIGHT_PAREN, "expect ')' after expression");
       return new Grouping(expr);
     }
 
-    throw this.error(this.peek(), "Expect expression.");
+    throw this.error(this.peek(), "invalid statement");
   }
 
-  private consume(type: TokenType, message: string): Token {
+  private consume(type: TokenType, message: string) {
     if (this.check(type)) return this.advance();
 
     throw this.error(this.peek(), message);
   }
 
-  private error(token: Token, message: string): Error {
-    // TODO: Handle error
-    // Lox.error(token, message);
-    return new Error(message);
+  private error(token: Token, message: string) {
+    // synchornize until it has found statement boundary
+    this.synchornize();
+
+    return new SyntaxError(token.lexeme, token.line, message);
+  }
+  private synchornize() {
+    this.advance();
+
+    while (!this.isAtEnd()) {
+      if (this.previous().type == TokenType.NEWLINE) return;
+      this.advance();
+    }
   }
 
   private match(...types: TokenType[]): boolean {
