@@ -21,7 +21,9 @@ export class Parser {
   }
 
   private statement(): Stmt {
-    // if (this.match(TokenType.PRINT)) return this.printStatement();
+    while (this.peek().type === TokenType.NEWLINE) {
+      this.consume(TokenType.NEWLINE, "");
+    }
     return this.expressionStatement();
   }
 
