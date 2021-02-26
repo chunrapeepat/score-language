@@ -32,7 +32,9 @@ describe("scanner should return a list of token correctly with EOF at the end", 
       new Token(TokenType.GREATER_EQUAL, ">=", null, 1),
       new Token(TokenType.LESS, "<", null, 1),
       new Token(TokenType.LESS_EQUAL, "<=", null, 1),
-      new Token(TokenType.EOF, "", null, 1),
+
+      new Token(TokenType.NEWLINE, "\n", null, 1),
+      new Token(TokenType.EOF, "", null, 2),
     ];
 
     const scanner = new Scanner(input);
@@ -52,7 +54,9 @@ describe("scanner should return a list of token correctly with EOF at the end", 
       new Token(TokenType.TYPE_NUMBER, "number", null, 1),
       new Token(TokenType.TYPE_STRING, "string", null, 1),
       new Token(TokenType.TYPE_BOOLEAN, "boolean", null, 1),
-      new Token(TokenType.EOF, "", null, 1),
+
+      new Token(TokenType.NEWLINE, "\n", null, 1),
+      new Token(TokenType.EOF, "", null, 2),
     ];
 
     const scanner = new Scanner(input);
@@ -65,7 +69,9 @@ describe("scanner should return a list of token correctly with EOF at the end", 
       new Token(TokenType.STRING, '"line 1"', "line 1", 1),
       new Token(TokenType.NEWLINE, "\n", null, 1),
       new Token(TokenType.STRING, '"line 2"', "line 2", 2),
-      new Token(TokenType.EOF, "", null, 2),
+
+      new Token(TokenType.NEWLINE, "\n", null, 2),
+      new Token(TokenType.EOF, "", null, 3),
     ];
 
     const scanner = new Scanner(input);
@@ -82,7 +88,9 @@ describe("scanner should return a list of token correctly with EOF at the end", 
       new Token(TokenType.TRUE, "true", null, 1),
       new Token(TokenType.FALSE, "false", null, 1),
       new Token(TokenType.NULL, "null", null, 1),
-      new Token(TokenType.EOF, "", null, 1),
+
+      new Token(TokenType.NEWLINE, "\n", null, 1),
+      new Token(TokenType.EOF, "", null, 2),
     ];
 
     const scanner = new Scanner(input);
@@ -107,7 +115,9 @@ describe("scanner should return a list of token correctly with EOF at the end", 
       new Token(TokenType.MOD, "mod", null, 1),
       new Token(TokenType.NUMBER, "3", 3, 1),
       new Token(TokenType.RIGHT_PAREN, ")", null, 1),
-      new Token(TokenType.EOF, "", null, 1),
+
+      new Token(TokenType.NEWLINE, "\n", null, 1),
+      new Token(TokenType.EOF, "", null, 2),
     ];
 
     const scanner = new Scanner(input);

@@ -25,7 +25,9 @@ export class Scanner {
       throw new Error("failed to scan tokens");
     }
 
-    this.tokens.push(new Token(TokenType.EOF, "", null, this.line));
+    // auto insert new-line at the end of file
+    this.tokens.push(new Token(TokenType.NEWLINE, "\n", null, this.line));
+    this.tokens.push(new Token(TokenType.EOF, "", null, this.line + 1));
     return this.tokens;
   }
 
