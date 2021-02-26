@@ -1,4 +1,5 @@
 import { Binary, Expr, Grouping, Literal, Unary, ExplicitType } from "./Expr";
+import { Stmt, Expression } from "./Stmt";
 import { Token } from "./Token";
 import { TokenType } from "./TokenType";
 
@@ -10,35 +11,25 @@ export class Parser {
     this.tokens = tokens;
   }
 
-  parse(): Expr {
-    return this.expression();
+  parse(): Stmt[] {
+    const statements: Stmt[] = [];
+    while (!this.isAtEnd()) {
+      statements.push(this.statement());
+    }
+
+    return statements;
   }
 
-  // parse(): Stmt[] {
-  //   const statements: Stmt[] = [];
-  //   while (!this.isAtEnd()) {
-  //     statements.push(this.statement());
-  //   }
+  private statement(): Stmt {
+    // if (this.match(TokenType.PRINT)) return this.printStatement();
+    return this.expressionStatement();
+  }
 
-  //   return statements;
-  // }
-
-  // private statement(): Stmt {
-  //   if (this.match(TokenType.PRINT)) return this.printStatement();
-  //   return this.expressionStatement();
-  // }
-
-  // private printStatement(): Stmt {
-  //   const value: Expr = this.expression();
-  //   this.consume(TokenType.SEMICOLON, "Expect ';' after value.");
-  //   return new Print(value);
-  // }
-
-  // private expressionStatement(): Stmt {
-  //   const value: Expr = this.expression();
-  //   this.consume(TokenType.SEMICOLON, "Expect ';' after value.");
-  //   return new Expression(value);
-  // }
+  private expressionStatement(): Stmt {
+    const value: Expr = this.expression();
+    this.consume(TokenType.NEWLINE, "Expect 'new line' after value.");
+    return new Expression(value);
+  }
 
   private expression(): Expr {
     return this.equality();
