@@ -7,7 +7,7 @@ import { TokenType } from "../TokenType";
 import { SyntaxError } from "../Error";
 
 describe("parse error", () => {
-  test("parser should detect multiple errors", () => {
+  it("should detect multiple errors", () => {
     const input = `!-+\n\n(10\n\n+`;
 
     const scanner = new Scanner(input);
@@ -16,7 +16,7 @@ describe("parse error", () => {
     expect(parser.getErrors().length).toBe(3);
   });
 
-  test("parser should detect invalid mathematical expression", () => {
+  it("should detect invalid mathematical expression", () => {
     const input = `!-+`;
 
     const scanner = new Scanner(input);
@@ -38,7 +38,7 @@ describe("parse error", () => {
 });
 
 describe("parse statements", () => {
-  test("skip new-line statement", () => {
+  it("should skip new-line statement", () => {
     const input = `10\n\n\n\n\n20`;
     const expectedOutput = [
       new Expression(new Literal(10)),

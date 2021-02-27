@@ -4,7 +4,7 @@ import { Token } from "../Token";
 import { TokenType } from "../TokenType";
 
 describe("scanner should throw error", () => {
-  test("unexpected token error", () => {
+  it("should throw unexpected token error", () => {
     const input = `name = . ;`;
 
     const scanner = new Scanner(input);
