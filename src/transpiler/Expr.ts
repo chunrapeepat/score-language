@@ -6,6 +6,7 @@ export interface ExprVisitor<R> {
   visitLiteralExpr(expr: Literal): R;
   visitUnaryExpr(expr: Unary): R;
   visitExplicitTypeExpr(expr: ExplicitType): R;
+  visitVariableExpr(expr: Variable): R;
 }
 export interface Expr {
   accept<R>(visitor: ExprVisitor<R>): R;
@@ -74,5 +75,17 @@ export class ExplicitType implements Expr {
 
   accept<R>(visitor: ExprVisitor<R>): R {
     return visitor.visitExplicitTypeExpr(this);
+  }
+}
+
+export class Variable implements Expr {
+  readonly name: Token;
+
+  constructor(name: Token) {
+    this.name = name;
+  }
+
+  accept<R>(visitor: ExprVisitor<R>): R {
+    return visitor.visitVariableExpr(this);
   }
 }

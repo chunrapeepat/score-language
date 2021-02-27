@@ -1,4 +1,7 @@
-const types = ["Expression | expression: Expr"];
+const types = [
+  "Expression | expression: Expr",
+  "VarStatement | name: Token, initializer: Expr",
+];
 
 function defineAst(baseName, types) {
   // define visitor
@@ -40,7 +43,6 @@ function defineType(baseName, type) {
 }
 
 console.log(`import { Token } from "./Token";
-import { TokenType } from "./TokenType";
 import { Expr } from "./Expr";
 `);
 defineAst("Stmt", types);
