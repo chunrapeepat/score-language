@@ -1,13 +1,13 @@
 import {
   ExprVisitor,
   Binary,
-  Expr,
   Grouping,
   Literal,
   Unary,
   ExplicitType,
+  Variable,
 } from "./Expr";
-import { StmtVisitor, Stmt, Expression } from "./Stmt";
+import { VarStatement, StmtVisitor, Stmt, Expression } from "./Stmt";
 import { TokenType } from "./TokenType";
 
 export class JSPrinter implements StmtVisitor<string>, ExprVisitor<string> {
@@ -19,12 +19,21 @@ export class JSPrinter implements StmtVisitor<string>, ExprVisitor<string> {
     return output.trim();
   }
 
-  visitExplicitTypeExpr(expr: ExplicitType): string {
-    // TODO: implement this later
-    return "";
+  visitVarStatementStmt(statement: VarStatement): string {
+    return `let _${statement.name.lexeme} = ${statement.initializer.accept(
+      this
+    )};`;
   }
   visitExpressionStmt(expr: Expression): string {
     return `${expr.expression.accept(this)};`;
+  }
+
+  visitVariableExpr(variable: Variable): string {
+    return `_${variable.name.lexeme}`;
+  }
+  visitExplicitTypeExpr(expr: ExplicitType): string {
+    // TODO: implement this later
+    return "";
   }
   visitBinaryExpr(expr: Binary): string {
     return `${expr.left.accept(this)} ${
@@ -35,7 +44,8 @@ export class JSPrinter implements StmtVisitor<string>, ExprVisitor<string> {
     return `(${expr.expression.accept(this)})`;
   }
   visitLiteralExpr(expr: Literal): string {
-    if (expr.value == null) return "null";
+    if (expr.value === null) return "null";
+    if (typeof expr.value === "string") return `"${expr.value}"`;
     return expr.value.toString();
   }
   visitUnaryExpr(expr: Unary): string {

@@ -2,8 +2,8 @@ import { Token } from "./Token";
 import { Expr } from "./Expr";
 
 export interface StmtVisitor<R> {
-  visitExpressionStmt(expr: Expression): R;
-  visitVarStatementStmt(expr: VarStatement): R;
+  visitExpressionStmt(stmt: Expression): R;
+  visitVarStatementStmt(stmt: VarStatement): R;
 }
 export interface Stmt {
   accept<R>(visitor: StmtVisitor<R>): R;

@@ -8,7 +8,7 @@ function defineAst(baseName, types) {
   console.log(`export interface ${baseName}Visitor<R> {
     ${types
       .map((x) => x.split("|")[0].trim())
-      .map((type) => `visit${type}${baseName}(expr: ${type}): R;`)
+      .map((type) => `visit${type}${baseName}(stmt: ${type}): R;`)
       .join("\n")}
   }`);
 
