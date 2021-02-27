@@ -123,6 +123,7 @@ export class Scanner {
     keywords["string"] = TokenType.TYPE_STRING;
     keywords["boolean"] = TokenType.TYPE_BOOLEAN;
     keywords["else"] = TokenType.ELSE;
+    keywords["var"] = TokenType.VAR;
 
     const text: string = this.source.substring(this.start, this.current);
     let type: TokenType = keywords[text];

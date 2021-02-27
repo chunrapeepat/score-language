@@ -4,7 +4,7 @@ import { Token } from "../Token";
 import { TokenType } from "../TokenType";
 
 describe("scanner should throw error", () => {
-  test("unexpected token error", () => {
+  it("should throw unexpected token error", () => {
     const input = `name = . ;`;
 
     const scanner = new Scanner(input);
@@ -20,6 +20,22 @@ describe("scanner should throw error", () => {
 });
 
 describe("scanner should return a list of token correctly with EOF at the end", () => {
+  test("var statement", () => {
+    const input = `var name = "test"`;
+    const expectedOutput = [
+      new Token(TokenType.VAR, "var", null, 1),
+      new Token(TokenType.IDENTIFIER, "name", null, 1),
+      new Token(TokenType.EQUAL, "=", null, 1),
+      new Token(TokenType.STRING, '"test"', "test", 1),
+
+      new Token(TokenType.NEWLINE, "\n", null, 1),
+      new Token(TokenType.EOF, "", null, 2),
+    ];
+
+    const scanner = new Scanner(input);
+    expect(scanner.scanTokens()).toEqual(expectedOutput);
+  });
+
   test("logical operators", () => {
     const input = `! not != = == > >= < <=`;
     const expectedOutput = [

@@ -4,6 +4,7 @@ const types = [
   "Literal | value: any",
   "Unary | operator: Token, right: Expr",
   "ExplicitType | type: TokenType",
+  "Variable | name: Token",
 ];
 
 function defineAst(baseName, types) {

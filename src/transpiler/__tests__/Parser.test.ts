@@ -1,13 +1,13 @@
-import { Binary, Grouping, Literal, Unary } from "../Expr";
+import { Binary, Grouping, Literal, Unary, Variable } from "../Expr";
 import { Parser } from "../Parser";
 import { Scanner } from "../Scanner";
-import { Expression } from "../Stmt";
+import { Expression, VarStatement } from "../Stmt";
 import { Token } from "../Token";
 import { TokenType } from "../TokenType";
 import { SyntaxError } from "../Error";
 
 describe("parse error", () => {
-  test("parser should detect multiple errors", () => {
+  it("should detect multiple errors", () => {
     const input = `!-+\n\n(10\n\n+`;
 
     const scanner = new Scanner(input);
@@ -16,7 +16,7 @@ describe("parse error", () => {
     expect(parser.getErrors().length).toBe(3);
   });
 
-  test("parser should detect invalid mathematical expression", () => {
+  it("should detect invalid mathematical expression", () => {
     const input = `!-+`;
 
     const scanner = new Scanner(input);
@@ -38,7 +38,39 @@ describe("parse error", () => {
 });
 
 describe("parse statements", () => {
-  test("skip new-line statement", () => {
+  it("should parse var statement with null initializer correctly", () => {
+    const input = `var str`;
+    const expectedOutput = [
+      new VarStatement(
+        new Token(TokenType.IDENTIFIER, "str", null, 1),
+        new Literal(null)
+      ),
+    ];
+
+    const scanner = new Scanner(input);
+    const parser = new Parser(scanner.scanTokens());
+    expect(parser.parse()).toEqual(expectedOutput);
+  });
+
+  it("should parse var statement correctly", () => {
+    const input = `var str = "hello " + name`;
+    const expectedOutput = [
+      new VarStatement(
+        new Token(TokenType.IDENTIFIER, "str", null, 1),
+        new Binary(
+          new Literal("hello "),
+          new Token(TokenType.PLUS, "+", null, 1),
+          new Variable(new Token(TokenType.IDENTIFIER, "name", null, 1))
+        )
+      ),
+    ];
+
+    const scanner = new Scanner(input);
+    const parser = new Parser(scanner.scanTokens());
+    expect(parser.parse()).toEqual(expectedOutput);
+  });
+
+  it("should skip new-line statement", () => {
     const input = `10\n\n\n\n\n20`;
     const expectedOutput = [
       new Expression(new Literal(10)),

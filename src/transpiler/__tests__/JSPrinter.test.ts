@@ -3,7 +3,21 @@ import { Parser } from "../Parser";
 import { Scanner } from "../Scanner";
 
 describe("translate the language to Javascript", () => {
-  test("logical operator should translate to JS correctly", () => {
+  it("should translate var statement to JS correctly", () => {
+    const input = `
+      var name = "test"
+      var window
+    `;
+    const expectedOutput = `let _name = "test";let _window = null;`;
+
+    const scanner = new Scanner(input);
+    const tokens = scanner.scanTokens();
+    const parser = new Parser(tokens);
+    const printer = new JSPrinter();
+    expect(printer.print(parser.parse())).toBe(expectedOutput);
+  });
+
+  it("should translate logical operator to JS correctly", () => {
     const input = `
       !(1 <= 10) == true
       not (10 == 10) == false
@@ -17,7 +31,7 @@ describe("translate the language to Javascript", () => {
     expect(printer.print(parser.parse())).toBe(expectedOutput);
   });
 
-  test("mathematical expression should translate to JS correctly", () => {
+  it("should translate mathematical expression to JS correctly", () => {
     const input = `
       (1 + 2) * 3 / 10
       5 * 4 * 3

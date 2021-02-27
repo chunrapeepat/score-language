@@ -1,11 +1,14 @@
-const types = ["Expression | expression: Expr"];
+const types = [
+  "Expression | expression: Expr",
+  "VarStatement | name: Token, initializer: Expr",
+];
 
 function defineAst(baseName, types) {
   // define visitor
   console.log(`export interface ${baseName}Visitor<R> {
     ${types
       .map((x) => x.split("|")[0].trim())
-      .map((type) => `visit${type}${baseName}(expr: ${type}): R;`)
+      .map((type) => `visit${type}${baseName}(stmt: ${type}): R;`)
       .join("\n")}
   }`);
 
@@ -40,7 +43,6 @@ function defineType(baseName, type) {
 }
 
 console.log(`import { Token } from "./Token";
-import { TokenType } from "./TokenType";
 import { Expr } from "./Expr";
 `);
 defineAst("Stmt", types);

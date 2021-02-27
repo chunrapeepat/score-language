@@ -1,5 +1,13 @@
-import { Binary, Expr, Grouping, Literal, Unary, ExplicitType } from "./Expr";
-import { Stmt, Expression } from "./Stmt";
+import {
+  Binary,
+  Expr,
+  Grouping,
+  Literal,
+  Unary,
+  ExplicitType,
+  Variable,
+} from "./Expr";
+import { Stmt, Expression, VarStatement } from "./Stmt";
 import { Token } from "./Token";
 import { TokenType } from "./TokenType";
 import { CompilationErrorInterface, SyntaxError } from "./Error";
@@ -37,7 +45,22 @@ export class Parser {
   }
 
   private statement(): Stmt {
+    if (this.match(TokenType.VAR)) {
+      return this.varStatement();
+    }
     return this.expressionStatement();
+  }
+
+  private varStatement(): Stmt {
+    const variableName: Token = this.consume(
+      TokenType.IDENTIFIER,
+      "expect an identifier after 'var' keyword"
+    );
+    let initializer: Expr = new Literal(null);
+    if (this.match(TokenType.EQUAL)) {
+      initializer = this.expression();
+    }
+    return new VarStatement(variableName, initializer);
   }
 
   private expressionStatement(): Stmt {
@@ -116,6 +139,9 @@ export class Parser {
   }
 
   private primary(): Expr {
+    if (this.match(TokenType.IDENTIFIER)) {
+      return new Variable(this.previous());
+    }
     if (this.match(TokenType.FALSE)) {
       return new Literal(false);
     }
