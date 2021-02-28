@@ -124,6 +124,11 @@ export class Scanner {
     keywords["boolean"] = TokenType.TYPE_BOOLEAN;
     keywords["else"] = TokenType.ELSE;
     keywords["var"] = TokenType.VAR;
+    keywords["set"] = TokenType.SET;
+    keywords["play"] = TokenType.PLAY;
+    keywords["wait"] = TokenType.WAIT;
+    keywords["say"] = TokenType.SAY;
+    keywords["print"] = TokenType.PRINT;
 
     const text: string = this.source.substring(this.start, this.current);
     let type: TokenType = keywords[text];

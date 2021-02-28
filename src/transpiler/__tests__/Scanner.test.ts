@@ -20,6 +20,83 @@ describe("scanner should throw error", () => {
 });
 
 describe("scanner should return a list of token correctly with EOF at the end", () => {
+  test("play statement", () => {
+    const input = `play note 1 for 30 secs`;
+    const expectedOutput = [
+      new Token(TokenType.PLAY, "play", null, 1),
+      new Token(TokenType.IDENTIFIER, "note", null, 1),
+      new Token(TokenType.NUMBER, "1", 1, 1),
+      new Token(TokenType.IDENTIFIER, "for", null, 1),
+      new Token(TokenType.NUMBER, "30", 30, 1),
+      new Token(TokenType.IDENTIFIER, "secs", null, 1),
+
+      new Token(TokenType.NEWLINE, "\n", null, 1),
+      new Token(TokenType.EOF, "", null, 2),
+    ];
+
+    const scanner = new Scanner(input);
+    expect(scanner.scanTokens()).toEqual(expectedOutput);
+  });
+
+  test("wait statement", () => {
+    const input = `wait 30 secs`;
+    const expectedOutput = [
+      new Token(TokenType.WAIT, "wait", null, 1),
+      new Token(TokenType.NUMBER, "30", 30, 1),
+      new Token(TokenType.IDENTIFIER, "secs", null, 1),
+
+      new Token(TokenType.NEWLINE, "\n", null, 1),
+      new Token(TokenType.EOF, "", null, 2),
+    ];
+
+    const scanner = new Scanner(input);
+    expect(scanner.scanTokens()).toEqual(expectedOutput);
+  });
+
+  test("say statement", () => {
+    const input = `say name`;
+    const expectedOutput = [
+      new Token(TokenType.SAY, "say", null, 1),
+      new Token(TokenType.IDENTIFIER, "name", null, 1),
+
+      new Token(TokenType.NEWLINE, "\n", null, 1),
+      new Token(TokenType.EOF, "", null, 2),
+    ];
+
+    const scanner = new Scanner(input);
+    expect(scanner.scanTokens()).toEqual(expectedOutput);
+  });
+
+  test("print statement", () => {
+    const input = `print name`;
+    const expectedOutput = [
+      new Token(TokenType.PRINT, "print", null, 1),
+      new Token(TokenType.IDENTIFIER, "name", null, 1),
+
+      new Token(TokenType.NEWLINE, "\n", null, 1),
+      new Token(TokenType.EOF, "", null, 2),
+    ];
+
+    const scanner = new Scanner(input);
+    expect(scanner.scanTokens()).toEqual(expectedOutput);
+  });
+
+  test("set statement", () => {
+    const input = `set name = "steve"`;
+    const expectedOutput = [
+      new Token(TokenType.SET, "set", null, 1),
+      new Token(TokenType.IDENTIFIER, "name", null, 1),
+      new Token(TokenType.EQUAL, "=", null, 1),
+      new Token(TokenType.STRING, '"steve"', "steve", 1),
+
+      new Token(TokenType.NEWLINE, "\n", null, 1),
+      new Token(TokenType.EOF, "", null, 2),
+    ];
+
+    const scanner = new Scanner(input);
+    expect(scanner.scanTokens()).toEqual(expectedOutput);
+  });
+
   test("var statement", () => {
     const input = `var name = "test"`;
     const expectedOutput = [
