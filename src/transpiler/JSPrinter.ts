@@ -7,7 +7,18 @@ import {
   ExplicitType,
   Variable,
 } from "./Expr";
-import { VarStatement, StmtVisitor, Stmt, Expression } from "./Stmt";
+import {
+  VarStatement,
+  StmtVisitor,
+  Stmt,
+  Expression,
+  SetStatement,
+  PrintStatement,
+  SayStatement,
+  WaitStatement,
+  PlayStatement,
+  IfStatement,
+} from "./Stmt";
 import { TokenType } from "./TokenType";
 
 export class JSPrinter implements StmtVisitor<string>, ExprVisitor<string> {
@@ -19,6 +30,51 @@ export class JSPrinter implements StmtVisitor<string>, ExprVisitor<string> {
     return output.trim();
   }
 
+  visitIfStatementStmt(statement: IfStatement): string {
+    if (!statement.alternate) {
+      return `if (${statement.test.accept(
+        this
+      )}) {${statement.consequent.map((s) => s.accept(this)).join("")}}`;
+    }
+
+    if (Array.isArray(statement.alternate)) {
+      return `if (${statement.test.accept(
+        this
+      )}) {${statement.consequent
+        .map((s) => s.accept(this))
+        .join("")}} else {${statement.alternate
+        .map((s) => s.accept(this))
+        .join("")}}`;
+    }
+
+    return `if (${statement.test.accept(
+      this
+    )}) {${statement.consequent
+      .map((s) => s.accept(this))
+      .join("")}} else ${statement.alternate.accept(this)}`;
+  }
+  visitPlayStatementStmt(statement: PlayStatement): string {
+    if (statement.type === "note") {
+      return `await this.playNote(${statement.value.accept(
+        this
+      )}, ${statement.duration?.accept(this)});`;
+    }
+    return "";
+  }
+  visitWaitStatementStmt(statement: WaitStatement): string {
+    return `await this.wait(${statement.duration.accept(this)});`;
+  }
+  visitSayStatementStmt(statement: SayStatement): string {
+    return `await this.say(${statement.value.accept(
+      this
+    )}, ${statement.duration?.accept(this)});`;
+  }
+  visitPrintStatementStmt(statement: PrintStatement): string {
+    return `this.print(${statement.value.accept(this)});`;
+  }
+  visitSetStatementStmt(statement: SetStatement): string {
+    return `_${statement.name.lexeme} = ${statement.value.accept(this)};`;
+  }
   visitVarStatementStmt(statement: VarStatement): string {
     return `let _${statement.name.lexeme} = ${statement.initializer.accept(
       this

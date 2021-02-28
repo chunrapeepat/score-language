@@ -7,7 +7,17 @@ import {
   ExplicitType,
   Variable,
 } from "./Expr";
-import { Stmt, Expression, VarStatement } from "./Stmt";
+import {
+  Stmt,
+  Expression,
+  VarStatement,
+  SetStatement,
+  PrintStatement,
+  WaitStatement,
+  SayStatement,
+  PlayStatement,
+  IfStatement,
+} from "./Stmt";
 import { Token } from "./Token";
 import { TokenType } from "./TokenType";
 import { CompilationErrorInterface, SyntaxError } from "./Error";
@@ -48,7 +58,151 @@ export class Parser {
     if (this.match(TokenType.VAR)) {
       return this.varStatement();
     }
+    if (this.match(TokenType.SET)) {
+      return this.setStatement();
+    }
+    if (this.match(TokenType.PRINT)) {
+      return this.printStatement();
+    }
+    if (this.match(TokenType.WAIT)) {
+      return this.waitStatement();
+    }
+    if (this.match(TokenType.SAY)) {
+      return this.sayStatement();
+    }
+    if (this.match(TokenType.PLAY)) {
+      return this.playStatement();
+    }
+    if (this.match(TokenType.IF)) {
+      return this.ifStatement();
+    }
     return this.expressionStatement();
+  }
+
+  private ifStatement(): Stmt {
+    const test: Expr = this.expression();
+    this.consume(TokenType.THEN, `expect 'then' after 'if' statement`);
+    this.consume(
+      TokenType.NEWLINE,
+      `expect 'new line' after 'then' keyword in 'if' statement`
+    );
+
+    const consequent: Stmt[] = [];
+    while (!this.isAtEnd()) {
+      if (this.match(TokenType.NEWLINE)) continue;
+      if (
+        this.peek().type === TokenType.END ||
+        this.peek().type === TokenType.ELSE
+      )
+        break;
+
+      try {
+        consequent.push(this.statement());
+      } catch (e) {
+        this.errors.push(e);
+      }
+    }
+
+    if (this.match(TokenType.END)) {
+      this.consume(
+        TokenType.NEWLINE,
+        `expect 'new line' after 'end' keyword in 'if' statement`
+      );
+      return new IfStatement(test, consequent);
+    }
+
+    if (this.match(TokenType.ELSE)) {
+      if (this.match(TokenType.NEWLINE)) {
+        const alternate: Stmt[] = [];
+        while (!this.isAtEnd()) {
+          if (this.match(TokenType.NEWLINE)) continue;
+          if (this.peek().type === TokenType.END) break;
+
+          try {
+            alternate.push(this.statement());
+          } catch (e) {
+            this.errors.push(e);
+          }
+        }
+
+        if (this.match(TokenType.END)) {
+          this.consume(
+            TokenType.NEWLINE,
+            `expect 'new line' after 'end' keyword in 'if' statement`
+          );
+          return new IfStatement(test, consequent, alternate);
+        }
+      }
+
+      if (this.match(TokenType.IF)) {
+        const elseIfStatement = this.ifStatement() as IfStatement;
+        return new IfStatement(test, consequent, elseIfStatement);
+      }
+    }
+
+    throw this.error(this.peek(), "invalid if statement");
+  }
+
+  private playStatement(): Stmt {
+    this.consumeIdentifier(
+      "note",
+      `expect 'note' keyword after 'play' statement.`
+    );
+    const value: Expr = this.expression();
+    if (this.matchIdentifier("for")) {
+      const duration: Expr = this.expression();
+      this.consumeIdentifier(
+        "secs",
+        `expect 'secs' keyword after 'play' statement.`
+      );
+      return new PlayStatement("note", value, duration);
+    }
+    return new PlayStatement("note", value);
+  }
+
+  private sayStatement(): Stmt {
+    const value: Expr = this.expression();
+    if (this.matchIdentifier("for")) {
+      const duration: Expr = this.expression();
+      this.consumeIdentifier(
+        "secs",
+        `expect 'secs' keyword after 'say' statement.`
+      );
+      return new SayStatement(value, duration);
+    }
+    return new SayStatement(value);
+  }
+
+  private waitStatement(): Stmt {
+    const duration: Expr = this.expression();
+    this.consumeIdentifier(
+      "secs",
+      `expect 'secs' keyword after 'wait' statement.`
+    );
+    return new WaitStatement(duration);
+  }
+
+  private printStatement(): Stmt {
+    const value: Expr = this.expression();
+    this.consume(
+      TokenType.NEWLINE,
+      "expect 'new line' after 'print' statement."
+    );
+    return new PrintStatement(value);
+  }
+
+  private setStatement(): Stmt {
+    const variableName: Token = this.consume(
+      TokenType.IDENTIFIER,
+      "expect an identifier after 'set' keyword"
+    );
+    this.consume(
+      TokenType.EQUAL,
+      "expect '=' after an identifier in 'set' statement"
+    );
+    const value: Expr = this.expression();
+    this.consume(TokenType.NEWLINE, "expect 'new line' after 'set' statement.");
+    return new SetStatement(variableName, value);
   }
 
   private varStatement(): Stmt {
@@ -60,6 +214,7 @@ export class Parser {
     if (this.match(TokenType.EQUAL)) {
       initializer = this.expression();
     }
+    this.consume(TokenType.NEWLINE, "expect 'new line' after 'var' statement.");
     return new VarStatement(variableName, initializer);
   }
 
@@ -173,12 +328,20 @@ export class Parser {
     throw this.error(this.peek(), "invalid statement");
   }
 
+  private consumeIdentifier(identifierName: string, message: string) {
+    if (
+      this.check(TokenType.IDENTIFIER) &&
+      this.peek().lexeme === identifierName
+    )
+      return this.advance();
+
+    throw this.error(this.peek(), message);
+  }
   private consume(type: TokenType, message: string) {
     if (this.check(type)) return this.advance();
 
     throw this.error(this.peek(), message);
   }
-
   private error(token: Token, message: string) {
     // synchornize until it has found statement boundary
     this.synchornize();
@@ -193,7 +356,18 @@ export class Parser {
       this.advance();
     }
   }
-
+  private matchIdentifier(...identifierNames: string[]): boolean {
+    for (const identifierName of identifierNames) {
+      if (
+        this.check(TokenType.IDENTIFIER) &&
+        this.peek().lexeme === identifierName
+      ) {
+        this.advance();
+        return true;
+      }
+    }
+    return false;
+  }
   private match(...types: TokenType[]): boolean {
     for (const type of types) {
       if (this.check(type)) {

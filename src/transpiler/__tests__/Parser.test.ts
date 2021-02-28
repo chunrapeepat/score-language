@@ -1,7 +1,16 @@
 import { Binary, Grouping, Literal, Unary, Variable } from "../Expr";
 import { Parser } from "../Parser";
 import { Scanner } from "../Scanner";
-import { Expression, VarStatement } from "../Stmt";
+import {
+  Expression,
+  VarStatement,
+  SetStatement,
+  PlayStatement,
+  WaitStatement,
+  PrintStatement,
+  SayStatement,
+  IfStatement,
+} from "../Stmt";
 import { Token } from "../Token";
 import { TokenType } from "../TokenType";
 import { SyntaxError } from "../Error";
@@ -38,12 +47,215 @@ describe("parse error", () => {
 });
 
 describe("parse statements", () => {
-  it("should parse var statement with null initializer correctly", () => {
-    const input = `var str`;
+  it("should parse nested if-else statement correctly", () => {
+    const input = `
+      if a <= 3 then
+        if a == 2 then
+          print "a is 2"
+        end
+      else
+        print "a is greater than 3"
+      end
+    `;
     const expectedOutput = [
-      new VarStatement(
-        new Token(TokenType.IDENTIFIER, "str", null, 1),
-        new Literal(null)
+      new IfStatement(
+        new Binary(
+          new Variable(new Token(TokenType.IDENTIFIER, "a", null, 2)),
+          new Token(TokenType.LESS_EQUAL, "<=", null, 2),
+          new Literal(3)
+        ),
+        [
+          new IfStatement(
+            new Binary(
+              new Variable(new Token(TokenType.IDENTIFIER, "a", null, 3)),
+              new Token(TokenType.EQUAL_EQUAL, "==", null, 3),
+              new Literal(2)
+            ),
+            [new PrintStatement(new Literal("a is 2"))]
+          ),
+        ],
+        [new PrintStatement(new Literal("a is greater than 3"))]
+      ),
+    ];
+
+    const scanner = new Scanner(input);
+    const parser = new Parser(scanner.scanTokens());
+    expect(parser.parse()).toEqual(expectedOutput);
+  });
+
+  it("should parse if-else with else-if statement correctly", () => {
+    const input = `
+      if a <= 3 then
+        print "a is less than or equal to 3"
+      else if a >= 0 then
+        print "a is greater than 0"
+      else
+        print "a is less than 0 or greater than 3"
+      end
+    `;
+    const expectedOutput = [
+      new IfStatement(
+        new Binary(
+          new Variable(new Token(TokenType.IDENTIFIER, "a", null, 2)),
+          new Token(TokenType.LESS_EQUAL, "<=", null, 2),
+          new Literal(3)
+        ),
+        [new PrintStatement(new Literal("a is less than or equal to 3"))],
+        new IfStatement(
+          new Binary(
+            new Variable(new Token(TokenType.IDENTIFIER, "a", null, 4)),
+            new Token(TokenType.GREATER_EQUAL, ">=", null, 4),
+            new Literal(0)
+          ),
+          [new PrintStatement(new Literal("a is greater than 0"))],
+          [
+            new PrintStatement(
+              new Literal("a is less than 0 or greater than 3")
+            ),
+          ]
+        )
+      ),
+    ];
+
+    const scanner = new Scanner(input);
+    const parser = new Parser(scanner.scanTokens());
+    expect(parser.parse()).toEqual(expectedOutput);
+  });
+
+  it("should parse if-else statement correctly", () => {
+    const input = `
+      if a <= 3 then
+        print "a is less than or equal to 3"
+      else
+        print "a is greater than 3"
+      end
+    `;
+    const expectedOutput = [
+      new IfStatement(
+        new Binary(
+          new Variable(new Token(TokenType.IDENTIFIER, "a", null, 2)),
+          new Token(TokenType.LESS_EQUAL, "<=", null, 2),
+          new Literal(3)
+        ),
+        [new PrintStatement(new Literal("a is less than or equal to 3"))],
+        [new PrintStatement(new Literal("a is greater than 3"))]
+      ),
+    ];
+
+    const scanner = new Scanner(input);
+    const parser = new Parser(scanner.scanTokens());
+    expect(parser.parse()).toEqual(expectedOutput);
+  });
+
+  it("should parse if statement correctly", () => {
+    const input = `
+      if a <= 3 then
+        print "a is less than or equal to 3"
+        set a = a + 1
+      end
+    `;
+    const expectedOutput = [
+      new IfStatement(
+        new Binary(
+          new Variable(new Token(TokenType.IDENTIFIER, "a", null, 2)),
+          new Token(TokenType.LESS_EQUAL, "<=", null, 2),
+          new Literal(3)
+        ),
+        [
+          new PrintStatement(new Literal("a is less than or equal to 3")),
+          new SetStatement(
+            new Token(TokenType.IDENTIFIER, "a", null, 4),
+            new Binary(
+              new Variable(new Token(TokenType.IDENTIFIER, "a", null, 4)),
+              new Token(TokenType.PLUS, "+", null, 4),
+              new Literal(1)
+            )
+          ),
+        ]
+      ),
+    ];
+
+    const scanner = new Scanner(input);
+    const parser = new Parser(scanner.scanTokens());
+    expect(parser.parse()).toEqual(expectedOutput);
+  });
+
+  it("should parse play statement correctly", () => {
+    const input = `
+      play note 3
+      play note n for 2 secs
+    `;
+    const expectedOutput = [
+      new PlayStatement("note", new Literal(3)),
+      new PlayStatement(
+        "note",
+        new Variable(new Token(TokenType.IDENTIFIER, "n", null, 3)),
+        new Literal(2)
+      ),
+    ];
+
+    const scanner = new Scanner(input);
+    const parser = new Parser(scanner.scanTokens());
+    expect(parser.parse()).toEqual(expectedOutput);
+  });
+
+  it("should parse say statement correctly", () => {
+    const input = `
+      say name
+      say "hello" for 2 secs
+    `;
+    const expectedOutput = [
+      new SayStatement(
+        new Variable(new Token(TokenType.IDENTIFIER, "name", null, 2))
+      ),
+      new SayStatement(new Literal("hello"), new Literal(2)),
+    ];
+
+    const scanner = new Scanner(input);
+    const parser = new Parser(scanner.scanTokens());
+    expect(parser.parse()).toEqual(expectedOutput);
+  });
+
+  it("should parse wait statement correctly", () => {
+    const input = `wait t * 10 secs`;
+    const expectedOutput = [
+      new WaitStatement(
+        new Binary(
+          new Variable(new Token(TokenType.IDENTIFIER, "t", null, 1)),
+          new Token(TokenType.STAR, "*", null, 1),
+          new Literal(10)
+        )
+      ),
+    ];
+
+    const scanner = new Scanner(input);
+    const parser = new Parser(scanner.scanTokens());
+    expect(parser.parse()).toEqual(expectedOutput);
+  });
+
+  it("should parse print statement correctly", () => {
+    const input = `print num + 10`;
+    const expectedOutput = [
+      new PrintStatement(
+        new Binary(
+          new Variable(new Token(TokenType.IDENTIFIER, "num", null, 1)),
+          new Token(TokenType.PLUS, "+", null, 1),
+          new Literal(10)
+        )
+      ),
+    ];
+
+    const scanner = new Scanner(input);
+    const parser = new Parser(scanner.scanTokens());
+    expect(parser.parse()).toEqual(expectedOutput);
+  });
+
+  it("should parse set statement correctly", () => {
+    const input = `set name = "steve"`;
+    const expectedOutput = [
+      new SetStatement(
+        new Token(TokenType.IDENTIFIER, "name", null, 1),
+        new Literal("steve")
       ),
     ];
 
@@ -53,15 +265,22 @@ describe("parse statements", () => {
   });
 
   it("should parse var statement correctly", () => {
-    const input = `var str = "hello " + name`;
+    const input = `
+      var str = "hello " + name
+      var num
+    `;
     const expectedOutput = [
       new VarStatement(
-        new Token(TokenType.IDENTIFIER, "str", null, 1),
+        new Token(TokenType.IDENTIFIER, "str", null, 2),
         new Binary(
           new Literal("hello "),
-          new Token(TokenType.PLUS, "+", null, 1),
-          new Variable(new Token(TokenType.IDENTIFIER, "name", null, 1))
+          new Token(TokenType.PLUS, "+", null, 2),
+          new Variable(new Token(TokenType.IDENTIFIER, "name", null, 2))
         )
+      ),
+      new VarStatement(
+        new Token(TokenType.IDENTIFIER, "num", null, 3),
+        new Literal(null)
       ),
     ];
 
