@@ -20,6 +20,22 @@ describe("scanner should throw error", () => {
 });
 
 describe("scanner should return a list of token correctly with EOF at the end", () => {
+  test("if statement", () => {
+    const input = `if then else end`;
+    const expectedOutput = [
+      new Token(TokenType.IF, "if", null, 1),
+      new Token(TokenType.THEN, "then", null, 1),
+      new Token(TokenType.ELSE, "else", null, 1),
+      new Token(TokenType.END, "end", null, 1),
+
+      new Token(TokenType.NEWLINE, "\n", null, 1),
+      new Token(TokenType.EOF, "", null, 2),
+    ];
+
+    const scanner = new Scanner(input);
+    expect(scanner.scanTokens()).toEqual(expectedOutput);
+  });
+
   test("play statement", () => {
     const input = `play note 1 for 30 secs`;
     const expectedOutput = [
