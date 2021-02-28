@@ -110,23 +110,28 @@ export class Parser {
       );
       return new IfStatement(test, consequent);
     } else if (this.match(TokenType.ELSE)) {
-      const alternate: Stmt[] = [];
-      while (!this.isAtEnd()) {
-        if (this.match(TokenType.NEWLINE)) continue;
-        if (this.peek().type === TokenType.END) break;
+      if (this.match(TokenType.NEWLINE)) {
+        const alternate: Stmt[] = [];
+        while (!this.isAtEnd()) {
+          if (this.match(TokenType.NEWLINE)) continue;
+          if (this.peek().type === TokenType.END) break;
 
-        try {
-          alternate.push(this.statement());
-        } catch (e) {
-          this.errors.push(e);
+          try {
+            alternate.push(this.statement());
+          } catch (e) {
+            this.errors.push(e);
+          }
         }
-      }
-      if (this.match(TokenType.END)) {
-        this.consume(
-          TokenType.NEWLINE,
-          `expect 'new line' after 'end' keyword in 'if' statement`
-        );
-        return new IfStatement(test, consequent, alternate);
+        if (this.match(TokenType.END)) {
+          this.consume(
+            TokenType.NEWLINE,
+            `expect 'new line' after 'end' keyword in 'if' statement`
+          );
+          return new IfStatement(test, consequent, alternate);
+        }
+      } else if (this.match(TokenType.IF)) {
+        const anotherIfStatement = this.ifStatement() as IfStatement;
+        return new IfStatement(test, consequent, anotherIfStatement);
       }
     }
 
