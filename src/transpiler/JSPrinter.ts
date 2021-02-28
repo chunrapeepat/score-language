@@ -7,7 +7,17 @@ import {
   ExplicitType,
   Variable,
 } from "./Expr";
-import { VarStatement, StmtVisitor, Stmt, Expression } from "./Stmt";
+import {
+  VarStatement,
+  StmtVisitor,
+  Stmt,
+  Expression,
+  SetStatement,
+  PrintStatement,
+  SayStatement,
+  WaitStatement,
+  PlayStatement,
+} from "./Stmt";
 import { TokenType } from "./TokenType";
 
 export class JSPrinter implements StmtVisitor<string>, ExprVisitor<string> {
@@ -19,6 +29,28 @@ export class JSPrinter implements StmtVisitor<string>, ExprVisitor<string> {
     return output.trim();
   }
 
+  visitPlayStatementStmt(statement: PlayStatement) {
+    if (statement.type === "note") {
+      return `await this.playNote(${statement.value.accept(
+        this
+      )}, ${statement.duration?.accept(this)});`;
+    }
+    return "";
+  }
+  visitWaitStatementStmt(statement: WaitStatement) {
+    return `await this.wait(${statement.duration.accept(this)});`;
+  }
+  visitSayStatementStmt(statement: SayStatement) {
+    return `await this.say(${statement.value.accept(
+      this
+    )}, ${statement.duration?.accept(this)});`;
+  }
+  visitPrintStatementStmt(statement: PrintStatement) {
+    return `this.print(${statement.value.accept(this)});`;
+  }
+  visitSetStatementStmt(statement: SetStatement) {
+    return `_${statement.name.lexeme} = ${statement.value.accept(this)};`;
+  }
   visitVarStatementStmt(statement: VarStatement): string {
     return `let _${statement.name.lexeme} = ${statement.initializer.accept(
       this
