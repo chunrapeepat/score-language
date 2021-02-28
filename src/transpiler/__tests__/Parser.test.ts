@@ -9,6 +9,7 @@ import {
   WaitStatement,
   PrintStatement,
   SayStatement,
+  IfStatement,
 } from "../Stmt";
 import { Token } from "../Token";
 import { TokenType } from "../TokenType";
@@ -46,6 +47,39 @@ describe("parse error", () => {
 });
 
 describe("parse statements", () => {
+  // it("should parse if statement correctly", () => {
+  //   const input = `
+  //     if a <= 3 then
+  //       print "a is less than or equal to 3"
+  //       set a = a + 1
+  //     end
+  //   `;
+  //   const expectedOutput = [
+  //     new IfStatement(
+  //       new Binary(
+  //         new Variable(new Token(TokenType.IDENTIFIER, "a", null, 2)),
+  //         new Token(TokenType.LESS_EQUAL, "<=", null, 2),
+  //         new Literal(3)
+  //       ),
+  //       [
+  //         new PrintStatement(new Literal("a is less than or equal to 3")),
+  //         new SetStatement(
+  //           new Token(TokenType.IDENTIFIER, "a", null, 3),
+  //           new Binary(
+  //             new Variable(new Token(TokenType.IDENTIFIER, "a", null, 3)),
+  //             new Token(TokenType.PLUS, "<=", null, 3),
+  //             new Literal(1)
+  //           )
+  //         ),
+  //       ]
+  //     ),
+  //   ];
+
+  //   const scanner = new Scanner(input);
+  //   const parser = new Parser(scanner.scanTokens());
+  //   expect(parser.parse()).toEqual(expectedOutput);
+  // });
+
   it("should parse play statement correctly", () => {
     const input = `
       play note 3

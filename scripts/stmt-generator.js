@@ -1,18 +1,19 @@
 const types = [
-  "Expression | expression: Expr",
-  "VarStatement | name: Token, initializer: Expr",
-  "SetStatement | name: Token, value: Expr",
-  "WaitStatement | duration: Expr",
-  "PrintStatement | value: Expr",
-  "SayStatement | value: Expr, duration?: Expr",
-  'PlayStatement | type: "note", value: Expr, duration?: Expr',
+  "Expression || expression: Expr",
+  "VarStatement || name: Token, initializer: Expr",
+  "SetStatement || name: Token, value: Expr",
+  "WaitStatement || duration: Expr",
+  "PrintStatement || value: Expr",
+  "SayStatement || value: Expr, duration?: Expr",
+  'PlayStatement || type: "note", value: Expr, duration?: Expr',
+  "IfStatement || test: Expr, consequent: Stmt[], alternate?: IfStatement | Stmt[]",
 ];
 
 function defineAst(baseName, types) {
   // define visitor
   console.log(`export interface ${baseName}Visitor<R> {
     ${types
-      .map((x) => x.split("|")[0].trim())
+      .map((x) => x.split("||")[0].trim())
       .map((type) => `visit${type}${baseName}(stmt: ${type}): R;`)
       .join("\n")}
   }`);
@@ -27,8 +28,8 @@ function defineAst(baseName, types) {
 }
 
 function defineType(baseName, type) {
-  const name = type.split("|")[0].trim();
-  const argStr = type.split("|")[1].trim();
+  const name = type.split("||")[0].trim();
+  const argStr = type.split("||")[1].trim();
   const args = argStr
     .split(",")
     .map((x) => x.trim())

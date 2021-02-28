@@ -9,6 +9,7 @@ export interface StmtVisitor<R> {
   visitPrintStatementStmt(stmt: PrintStatement): R;
   visitSayStatementStmt(stmt: SayStatement): R;
   visitPlayStatementStmt(stmt: PlayStatement): R;
+  visitIfStatementStmt(stmt: IfStatement): R;
 }
 export interface Stmt {
   accept<R>(visitor: StmtVisitor<R>): R;
@@ -105,5 +106,25 @@ export class PlayStatement implements Stmt {
 
   accept<R>(visitor: StmtVisitor<R>): R {
     return visitor.visitPlayStatementStmt(this);
+  }
+}
+
+export class IfStatement implements Stmt {
+  readonly test: Expr;
+  readonly consequent: Stmt[];
+  readonly alternate?: IfStatement | Stmt[];
+
+  constructor(
+    test: Expr,
+    consequent: Stmt[],
+    alternate?: IfStatement | Stmt[]
+  ) {
+    this.test = test;
+    this.consequent = consequent;
+    this.alternate = alternate;
+  }
+
+  accept<R>(visitor: StmtVisitor<R>): R {
+    return visitor.visitIfStatementStmt(this);
   }
 }
