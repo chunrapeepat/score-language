@@ -3,6 +3,76 @@ import { Parser } from "../Parser";
 import { Scanner } from "../Scanner";
 
 describe("translate the language to Javascript", () => {
+  it("should translate if-else with else-if statement to JS correctly", () => {
+    const input = `
+      if a <= 3 then
+        print "a is less than or equal to 3"
+      else if a >= 0 then
+        print "a is greater than 0"
+      else
+        print "a is less than 0 or greater than 3"
+      end
+    `;
+    const expectedOutput = `if (_a <= 3) {this.print("a is less than or equal to 3");} else if (_a >= 0) {this.print("a is greater than 0");} else {this.print("a is less than 0 or greater than 3");}`;
+
+    const scanner = new Scanner(input);
+    const tokens = scanner.scanTokens();
+    const parser = new Parser(tokens);
+    const printer = new JSPrinter();
+    expect(printer.print(parser.parse())).toBe(expectedOutput);
+  });
+
+  it("should translate if-else statement to JS correctly", () => {
+    const input = `
+      if a <= 3 then
+        if a == 2 then
+          print "a is 2"
+        end
+      else
+        print "a is greater than 3"
+      end
+    `;
+    const expectedOutput = `if (_a <= 3) {if (_a == 2) {this.print("a is 2");}} else {this.print("a is greater than 3");}`;
+
+    const scanner = new Scanner(input);
+    const tokens = scanner.scanTokens();
+    const parser = new Parser(tokens);
+    const printer = new JSPrinter();
+    expect(printer.print(parser.parse())).toBe(expectedOutput);
+  });
+
+  it("should translate if-else statement to JS correctly", () => {
+    const input = `
+      if a <= 3 then
+        print "a is less than or equal to 3"
+      else
+        print "a is greater than 3"
+      end
+    `;
+    const expectedOutput = `if (_a <= 3) {this.print("a is less than or equal to 3");} else {this.print("a is greater than 3");}`;
+
+    const scanner = new Scanner(input);
+    const tokens = scanner.scanTokens();
+    const parser = new Parser(tokens);
+    const printer = new JSPrinter();
+    expect(printer.print(parser.parse())).toBe(expectedOutput);
+  });
+
+  it("should translate if-then-end statement to JS correctly", () => {
+    const input = `
+      if a <= 3 then
+        print "a is less than or equal to 3"
+      end
+    `;
+    const expectedOutput = `if (_a <= 3) {this.print("a is less than or equal to 3");}`;
+
+    const scanner = new Scanner(input);
+    const tokens = scanner.scanTokens();
+    const parser = new Parser(tokens);
+    const printer = new JSPrinter();
+    expect(printer.print(parser.parse())).toBe(expectedOutput);
+  });
+
   it("should translate play statement to JS correctly", () => {
     const input = `
       play note n * i
