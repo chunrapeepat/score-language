@@ -109,7 +109,9 @@ export class Parser {
         `expect 'new line' after 'end' keyword in 'if' statement`
       );
       return new IfStatement(test, consequent);
-    } else if (this.match(TokenType.ELSE)) {
+    }
+
+    if (this.match(TokenType.ELSE)) {
       if (this.match(TokenType.NEWLINE)) {
         const alternate: Stmt[] = [];
         while (!this.isAtEnd()) {
@@ -122,6 +124,7 @@ export class Parser {
             this.errors.push(e);
           }
         }
+
         if (this.match(TokenType.END)) {
           this.consume(
             TokenType.NEWLINE,
@@ -129,9 +132,11 @@ export class Parser {
           );
           return new IfStatement(test, consequent, alternate);
         }
-      } else if (this.match(TokenType.IF)) {
-        const anotherIfStatement = this.ifStatement() as IfStatement;
-        return new IfStatement(test, consequent, anotherIfStatement);
+      }
+
+      if (this.match(TokenType.IF)) {
+        const elseIfStatement = this.ifStatement() as IfStatement;
+        return new IfStatement(test, consequent, elseIfStatement);
       }
     }
 
