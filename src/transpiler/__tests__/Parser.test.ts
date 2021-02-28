@@ -1,7 +1,15 @@
 import { Binary, Grouping, Literal, Unary, Variable } from "../Expr";
 import { Parser } from "../Parser";
 import { Scanner } from "../Scanner";
-import { Expression, VarStatement } from "../Stmt";
+import {
+  Expression,
+  VarStatement,
+  SetStatement,
+  PlayStatement,
+  WaitStatement,
+  PrintStatement,
+  SayStatement,
+} from "../Stmt";
 import { Token } from "../Token";
 import { TokenType } from "../TokenType";
 import { SyntaxError } from "../Error";
@@ -38,12 +46,82 @@ describe("parse error", () => {
 });
 
 describe("parse statements", () => {
-  it("should parse var statement with null initializer correctly", () => {
-    const input = `var str`;
+  it("should parse play statement correctly", () => {
+    const input = `
+      play note 3
+      play note n for 2 secs
+    `;
     const expectedOutput = [
-      new VarStatement(
-        new Token(TokenType.IDENTIFIER, "str", null, 1),
-        new Literal(null)
+      new PlayStatement("note", new Literal(3)),
+      new PlayStatement(
+        "note",
+        new Variable(new Token(TokenType.IDENTIFIER, "n", null, 3)),
+        new Literal(2)
+      ),
+    ];
+
+    const scanner = new Scanner(input);
+    const parser = new Parser(scanner.scanTokens());
+    expect(parser.parse()).toEqual(expectedOutput);
+  });
+
+  it("should parse say statement correctly", () => {
+    const input = `
+      say name
+      say "hello" for 2 secs
+    `;
+    const expectedOutput = [
+      new SayStatement(
+        new Variable(new Token(TokenType.IDENTIFIER, "name", null, 2))
+      ),
+      new SayStatement(new Literal("hello"), new Literal(2)),
+    ];
+
+    const scanner = new Scanner(input);
+    const parser = new Parser(scanner.scanTokens());
+    expect(parser.parse()).toEqual(expectedOutput);
+  });
+
+  it("should parse wait statement correctly", () => {
+    const input = `wait t * 10 secs`;
+    const expectedOutput = [
+      new WaitStatement(
+        new Binary(
+          new Variable(new Token(TokenType.IDENTIFIER, "t", null, 1)),
+          new Token(TokenType.STAR, "*", null, 1),
+          new Literal(10)
+        )
+      ),
+    ];
+
+    const scanner = new Scanner(input);
+    const parser = new Parser(scanner.scanTokens());
+    expect(parser.parse()).toEqual(expectedOutput);
+  });
+
+  it("should parse print statement correctly", () => {
+    const input = `print num + 10`;
+    const expectedOutput = [
+      new PrintStatement(
+        new Binary(
+          new Variable(new Token(TokenType.IDENTIFIER, "num", null, 1)),
+          new Token(TokenType.PLUS, "+", null, 1),
+          new Literal(10)
+        )
+      ),
+    ];
+
+    const scanner = new Scanner(input);
+    const parser = new Parser(scanner.scanTokens());
+    expect(parser.parse()).toEqual(expectedOutput);
+  });
+
+  it("should parse set statement correctly", () => {
+    const input = `set name = "steve"`;
+    const expectedOutput = [
+      new SetStatement(
+        new Token(TokenType.IDENTIFIER, "name", null, 1),
+        new Literal("steve")
       ),
     ];
 
@@ -53,15 +131,22 @@ describe("parse statements", () => {
   });
 
   it("should parse var statement correctly", () => {
-    const input = `var str = "hello " + name`;
+    const input = `
+      var str = "hello " + name
+      var num
+    `;
     const expectedOutput = [
       new VarStatement(
-        new Token(TokenType.IDENTIFIER, "str", null, 1),
+        new Token(TokenType.IDENTIFIER, "str", null, 2),
         new Binary(
           new Literal("hello "),
-          new Token(TokenType.PLUS, "+", null, 1),
-          new Variable(new Token(TokenType.IDENTIFIER, "name", null, 1))
+          new Token(TokenType.PLUS, "+", null, 2),
+          new Variable(new Token(TokenType.IDENTIFIER, "name", null, 2))
         )
+      ),
+      new VarStatement(
+        new Token(TokenType.IDENTIFIER, "num", null, 3),
+        new Literal(null)
       ),
     ];
 

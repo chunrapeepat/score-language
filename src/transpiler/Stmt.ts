@@ -4,6 +4,11 @@ import { Expr } from "./Expr";
 export interface StmtVisitor<R> {
   visitExpressionStmt(stmt: Expression): R;
   visitVarStatementStmt(stmt: VarStatement): R;
+  visitSetStatementStmt(stmt: SetStatement): R;
+  visitWaitStatementStmt(stmt: WaitStatement): R;
+  visitPrintStatementStmt(stmt: PrintStatement): R;
+  visitSayStatementStmt(stmt: SayStatement): R;
+  visitPlayStatementStmt(stmt: PlayStatement): R;
 }
 export interface Stmt {
   accept<R>(visitor: StmtVisitor<R>): R;
@@ -32,5 +37,73 @@ export class VarStatement implements Stmt {
 
   accept<R>(visitor: StmtVisitor<R>): R {
     return visitor.visitVarStatementStmt(this);
+  }
+}
+
+export class SetStatement implements Stmt {
+  readonly name: Token;
+  readonly value: Expr;
+
+  constructor(name: Token, value: Expr) {
+    this.name = name;
+    this.value = value;
+  }
+
+  accept<R>(visitor: StmtVisitor<R>): R {
+    return visitor.visitSetStatementStmt(this);
+  }
+}
+
+export class WaitStatement implements Stmt {
+  readonly duration: Expr;
+
+  constructor(duration: Expr) {
+    this.duration = duration;
+  }
+
+  accept<R>(visitor: StmtVisitor<R>): R {
+    return visitor.visitWaitStatementStmt(this);
+  }
+}
+
+export class PrintStatement implements Stmt {
+  readonly value: Expr;
+
+  constructor(value: Expr) {
+    this.value = value;
+  }
+
+  accept<R>(visitor: StmtVisitor<R>): R {
+    return visitor.visitPrintStatementStmt(this);
+  }
+}
+
+export class SayStatement implements Stmt {
+  readonly value: Expr;
+  readonly duration?: Expr;
+
+  constructor(value: Expr, duration?: Expr) {
+    this.value = value;
+    this.duration = duration;
+  }
+
+  accept<R>(visitor: StmtVisitor<R>): R {
+    return visitor.visitSayStatementStmt(this);
+  }
+}
+
+export class PlayStatement implements Stmt {
+  readonly type: "note";
+  readonly value: Expr;
+  readonly duration?: Expr;
+
+  constructor(type: "note", value: Expr, duration?: Expr) {
+    this.type = type;
+    this.value = value;
+    this.duration = duration;
+  }
+
+  accept<R>(visitor: StmtVisitor<R>): R {
+    return visitor.visitPlayStatementStmt(this);
   }
 }

@@ -1,6 +1,11 @@
 const types = [
   "Expression | expression: Expr",
   "VarStatement | name: Token, initializer: Expr",
+  "SetStatement | name: Token, value: Expr",
+  "WaitStatement | duration: Expr",
+  "PrintStatement | value: Expr",
+  "SayStatement | value: Expr, duration?: Expr",
+  'PlayStatement | type: "note", value: Expr, duration?: Expr',
 ];
 
 function defineAst(baseName, types) {
@@ -33,7 +38,9 @@ function defineType(baseName, type) {
     ${args.map((x) => `readonly ${x[0]}: ${x[1]};`).join("\n")}
   
     constructor(${argStr}) {
-      ${args.map((x) => `this.${x[0]} = ${x[0]};`).join("\n")}
+      ${args
+        .map((x) => `this.${x[0].replace("?", "")} = ${x[0].replace("?", "")};`)
+        .join("\n")}
     }
 
     accept<R>(visitor: ${baseName}Visitor<R>): R {
