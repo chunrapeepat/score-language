@@ -18,6 +18,7 @@ import {
   PlayStatement,
   IfStatement,
   WhileStatement,
+  RepeatStatement,
 } from "./Stmt";
 import { Token } from "./Token";
 import { TokenType } from "./TokenType";
@@ -80,7 +81,46 @@ export class Parser {
     if (this.match(TokenType.WHILE)) {
       return this.whileStatement();
     }
+    if (this.match(TokenType.REPEAT)) {
+      return this.repeatStatement();
+    }
     return this.expressionStatement();
+  }
+
+  private repeatStatement(): Stmt {
+    const n: Expr = this.expression();
+    this.consumeIdentifier(
+      "times",
+      `expect 'times' keyword in 'while' statement.`
+    );
+    this.consume(TokenType.THEN, `expect 'then' after 'while' statement`);
+    this.consume(
+      TokenType.NEWLINE,
+      `expect 'new line' after 'then' keyword in 'while' statement`
+    );
+
+    const body: Stmt[] = [];
+    while (!this.isAtEnd()) {
+      if (this.match(TokenType.NEWLINE)) continue;
+      if (this.peek().type === TokenType.END) break;
+
+      try {
+        body.push(this.statement());
+      } catch (e) {
+        this.errors.push(e);
+      }
+    }
+
+    if (this.match(TokenType.END)) {
+      this.consume(
+        TokenType.NEWLINE,
+        `expect 'new line' after 'end' keyword in 'while' statement`
+      );
+
+      return new RepeatStatement(n, body);
+    }
+
+    throw this.error(this.peek(), "invalid repeat statement");
   }
 
   private whileStatement(): Stmt {

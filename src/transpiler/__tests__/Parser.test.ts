@@ -11,6 +11,7 @@ import {
   SayStatement,
   IfStatement,
   WhileStatement,
+  RepeatStatement,
 } from "../Stmt";
 import { Token } from "../Token";
 import { TokenType } from "../TokenType";
@@ -48,6 +49,24 @@ describe("parse error", () => {
 });
 
 describe("parse statements", () => {
+  it("should parse repeat statement correctly", () => {
+    const input = `
+      repeat 10 times then
+        print "hello"
+      end
+    `;
+
+    const expectedOutput = [
+      new RepeatStatement(new Literal(10), [
+        new PrintStatement(new Literal("hello")),
+      ]),
+    ];
+
+    const scanner = new Scanner(input);
+    const parser = new Parser(scanner.scanTokens());
+    expect(parser.parse()).toEqual(expectedOutput);
+  });
+
   it("should parse while statement correctly", () => {
     const input = `
       while true then
