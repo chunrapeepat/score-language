@@ -13,6 +13,7 @@ statement → exprStmt
 	| printStmt
 	| ifStmt
 	| whileStmt
+	| repeatStmt
 	| varStmt
 	| setStmt
 	| sayStmt
@@ -25,6 +26,7 @@ ifStmt -> "if" expression "then" "\n" statement* "end" "\n"
 	| "if" expression "then" "\n" statement* "else" "\n" statement* "end" "\n"
 	| "if" expression "then" "\n" statement* "else" ifStmt
 whileStmt → "while" expression "then" "\n" statement* "end" "\n"
+repeatStmt → "repeat" expression "times" "then" "\n" statement* "end" "\n"
 varStmt → "var" ID ("=" expression)? "\n"
 setStmt → "set" ID "=" expression "\n"
 sayStmt → "say" expression (ID["for"] expression ID["secs"])? "\n"
