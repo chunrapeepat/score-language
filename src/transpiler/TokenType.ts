@@ -47,4 +47,5 @@ export enum TokenType {
   END,
   ELSE,
   WHILE,
+  REPEAT,
 }
