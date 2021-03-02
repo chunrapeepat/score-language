@@ -133,6 +133,7 @@ export class Scanner {
     keywords["then"] = TokenType.THEN;
     keywords["else"] = TokenType.ELSE;
     keywords["end"] = TokenType.END;
+    keywords["while"] = TokenType.WHILE;
 
     const text: string = this.source.substring(this.start, this.current);
     let type: TokenType = keywords[text];
