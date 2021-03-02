@@ -3,6 +3,22 @@ import { Parser } from "../Parser";
 import { Scanner } from "../Scanner";
 
 describe("translate the language to Javascript", () => {
+  it("should translate repeat statement to JS correctly", () => {
+    const input = `
+      var n = 10
+      repeat n times then
+        print n
+      end
+    `;
+    const expectedOutput = `let _n = 10;{for (let i = 0; i < _n; ++i) {this.print(_n);}}`;
+
+    const scanner = new Scanner(input);
+    const tokens = scanner.scanTokens();
+    const parser = new Parser(tokens);
+    const printer = new JSPrinter();
+    expect(printer.print(parser.parse())).toBe(expectedOutput);
+  });
+
   it("should translate while statement to JS correctly", () => {
     const input = `
       var a = 10

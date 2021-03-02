@@ -19,6 +19,7 @@ import {
   PlayStatement,
   IfStatement,
   WhileStatement,
+  RepeatStatement,
 } from "./Stmt";
 import { TokenType } from "./TokenType";
 
@@ -31,6 +32,11 @@ export class JSPrinter implements StmtVisitor<string>, ExprVisitor<string> {
     return output.trim();
   }
 
+  visitRepeatStatementStmt(statement: RepeatStatement): string {
+    return `{for (let i = 0; i < ${statement.n.accept(
+      this
+    )}; ++i) {${statement.body.map((s) => s.accept(this)).join("")}}}`;
+  }
   visitWhileStatementStmt(statement: WhileStatement): string {
     return `while (${statement.test.accept(this)}) {${statement.body
       .map((s) => s.accept(this))
