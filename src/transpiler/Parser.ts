@@ -17,6 +17,7 @@ import {
   SayStatement,
   PlayStatement,
   IfStatement,
+  WhileStatement,
 } from "./Stmt";
 import { Token } from "./Token";
 import { TokenType } from "./TokenType";
@@ -76,7 +77,42 @@ export class Parser {
     if (this.match(TokenType.IF)) {
       return this.ifStatement();
     }
+    if (this.match(TokenType.WHILE)) {
+      return this.whileStatement();
+    }
     return this.expressionStatement();
+  }
+
+  private whileStatement(): Stmt {
+    const test: Expr = this.expression();
+    this.consume(TokenType.THEN, `expect 'then' after 'while' statement`);
+    this.consume(
+      TokenType.NEWLINE,
+      `expect 'new line' after 'then' keyword in 'while' statement`
+    );
+
+    const body: Stmt[] = [];
+    while (!this.isAtEnd()) {
+      if (this.match(TokenType.NEWLINE)) continue;
+      if (this.peek().type === TokenType.END) break;
+
+      try {
+        body.push(this.statement());
+      } catch (e) {
+        this.errors.push(e);
+      }
+    }
+
+    if (this.match(TokenType.END)) {
+      this.consume(
+        TokenType.NEWLINE,
+        `expect 'new line' after 'end' keyword in 'while' statement`
+      );
+
+      return new WhileStatement(test, body);
+    }
+
+    throw this.error(this.peek(), "invalid while statement");
   }
 
   private ifStatement(): Stmt {

@@ -10,6 +10,7 @@ export interface StmtVisitor<R> {
   visitSayStatementStmt(stmt: SayStatement): R;
   visitPlayStatementStmt(stmt: PlayStatement): R;
   visitIfStatementStmt(stmt: IfStatement): R;
+  visitWhileStatementStmt(stmt: WhileStatement): R;
 }
 export interface Stmt {
   accept<R>(visitor: StmtVisitor<R>): R;
@@ -126,5 +127,19 @@ export class IfStatement implements Stmt {
 
   accept<R>(visitor: StmtVisitor<R>): R {
     return visitor.visitIfStatementStmt(this);
+  }
+}
+
+export class WhileStatement implements Stmt {
+  readonly test: Expr;
+  readonly body: Stmt[];
+
+  constructor(test: Expr, body: Stmt[]) {
+    this.test = test;
+    this.body = body;
+  }
+
+  accept<R>(visitor: StmtVisitor<R>): R {
+    return visitor.visitWhileStatementStmt(this);
   }
 }

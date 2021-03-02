@@ -7,6 +7,7 @@ const types = [
   "SayStatement || value: Expr, duration?: Expr",
   'PlayStatement || type: "note", value: Expr, duration?: Expr',
   "IfStatement || test: Expr, consequent: Stmt[], alternate?: IfStatement | Stmt[]",
+  "WhileStatement || test: Expr, body: Stmt[]",
 ];
 
 function defineAst(baseName, types) {

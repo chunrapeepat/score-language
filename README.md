@@ -22,7 +22,7 @@ statement → exprStmt
 	| "\n"
 exprStmt → expression "\n"
 printStmt → "print" expression "\n"
-ifStmt -> "if" expression "then" "\n" statement* "end" "\n"
+ifStmt → "if" expression "then" "\n" statement* "end" "\n"
 	| "if" expression "then" "\n" statement* "else" "\n" statement* "end" "\n"
 	| "if" expression "then" "\n" statement* "else" ifStmt
 whileStmt → "while" expression "then" "\n" statement* "end" "\n"

@@ -10,6 +10,7 @@ import {
   PrintStatement,
   SayStatement,
   IfStatement,
+  WhileStatement,
 } from "../Stmt";
 import { Token } from "../Token";
 import { TokenType } from "../TokenType";
@@ -47,6 +48,24 @@ describe("parse error", () => {
 });
 
 describe("parse statements", () => {
+  it("should parse while statement correctly", () => {
+    const input = `
+      while true then
+        print "infinite loop" 
+      end
+    `;
+
+    const expectedOutput = [
+      new WhileStatement(new Literal(true), [
+        new PrintStatement(new Literal("infinite loop")),
+      ]),
+    ];
+
+    const scanner = new Scanner(input);
+    const parser = new Parser(scanner.scanTokens());
+    expect(parser.parse()).toEqual(expectedOutput);
+  });
+
   it("should parse nested if-else statement correctly", () => {
     const input = `
       if a <= 3 then
