@@ -3,6 +3,23 @@ import { Parser } from "../Parser";
 import { Scanner } from "../Scanner";
 
 describe("translate the language to Javascript", () => {
+  it("should translate while statement to JS correctly", () => {
+    const input = `
+      var a = 10
+      while a < 10 then
+        print a
+        set a = a + 1
+      end
+    `;
+    const expectedOutput = `let _a = 10;while (_a < 10) {this.print(_a);_a = _a + 1;}`;
+
+    const scanner = new Scanner(input);
+    const tokens = scanner.scanTokens();
+    const parser = new Parser(tokens);
+    const printer = new JSPrinter();
+    expect(printer.print(parser.parse())).toBe(expectedOutput);
+  });
+
   it("should translate if-else with else-if statement to JS correctly", () => {
     const input = `
       if a <= 3 then

@@ -18,6 +18,7 @@ import {
   WaitStatement,
   PlayStatement,
   IfStatement,
+  WhileStatement,
 } from "./Stmt";
 import { TokenType } from "./TokenType";
 
@@ -30,6 +31,11 @@ export class JSPrinter implements StmtVisitor<string>, ExprVisitor<string> {
     return output.trim();
   }
 
+  visitWhileStatementStmt(statement: WhileStatement): string {
+    return `while (${statement.test.accept(this)}) {${statement.body
+      .map((s) => s.accept(this))
+      .join("")}}`;
+  }
   visitIfStatementStmt(statement: IfStatement): string {
     if (!statement.alternate) {
       return `if (${statement.test.accept(
