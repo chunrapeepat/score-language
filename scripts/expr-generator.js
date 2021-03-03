@@ -5,6 +5,7 @@ const types = [
   "Unary | operator: Token, right: Expr",
   "ExplicitType | type: TokenType",
   "Variable | name: Token",
+  "FunctionCall | name: Token, args: Expr[]",
 ];
 
 function defineAst(baseName, types) {

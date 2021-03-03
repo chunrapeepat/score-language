@@ -20,6 +20,25 @@ describe("scanner should throw error", () => {
 });
 
 describe("scanner should return a list of token correctly with EOF at the end", () => {
+  test("function call expression", () => {
+    const input = `[random from 1 to 10]`;
+    const expectedOutput = [
+      new Token(TokenType.LEFT_BRACKET, "[", null, 1),
+      new Token(TokenType.IDENTIFIER, "random", null, 1),
+      new Token(TokenType.IDENTIFIER, "from", null, 1),
+      new Token(TokenType.NUMBER, "1", 1, 1),
+      new Token(TokenType.IDENTIFIER, "to", null, 1),
+      new Token(TokenType.NUMBER, "10", 10, 1),
+      new Token(TokenType.RIGHT_BRACKET, "]", null, 1),
+
+      new Token(TokenType.NEWLINE, "\n", null, 1),
+      new Token(TokenType.EOF, "", null, 2),
+    ];
+
+    const scanner = new Scanner(input);
+    expect(scanner.scanTokens()).toEqual(expectedOutput);
+  });
+
   test("break and continue statements", () => {
     const input = `break continue`;
     const expectedOutput = [

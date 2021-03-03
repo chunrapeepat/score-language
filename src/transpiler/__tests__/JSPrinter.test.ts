@@ -3,6 +3,20 @@ import { Parser } from "../Parser";
 import { Scanner } from "../Scanner";
 
 describe("translate the language to Javascript", () => {
+  it("should translate function call to JS correctly", () => {
+    const input = `
+      var rand = [random 1 to 100]
+      set rand = rand + 1
+    `;
+    const expectedOutput = `let _rand = this.functionCall("random", [1,(typeof _to === "undefined" ? undefined : _to),100]);_rand = _rand + 1;`;
+
+    const scanner = new Scanner(input);
+    const tokens = scanner.scanTokens();
+    const parser = new Parser(tokens);
+    const printer = new JSPrinter();
+    expect(printer.print(parser.parse())).toBe(expectedOutput);
+  });
+
   it("should translate exit statement to JS correctly", () => {
     const input = `exit program`;
     const expectedOutput = `this.exitProgram();`;
@@ -95,7 +109,7 @@ describe("translate the language to Javascript", () => {
         print "a is greater than 3"
       end
     `;
-    const expectedOutput = `if (_a <= 3) {if (_a == 2) {this.print("a is 2");}} else {this.print("a is greater than 3");}`;
+    const expectedOutput = `if (_a <= 3) {if (_a === 2) {this.print("a is 2");}} else {this.print("a is greater than 3");}`;
 
     const scanner = new Scanner(input);
     const tokens = scanner.scanTokens();
@@ -222,7 +236,7 @@ describe("translate the language to Javascript", () => {
       !(1 <= 10) == true
       not (10 == 10) == false
     `;
-    const expectedOutput = `!(1 <= 10) == true;!(10 == 10) == false;`;
+    const expectedOutput = `!(1 <= 10) === true;!(10 === 10) === false;`;
 
     const scanner = new Scanner(input);
     const tokens = scanner.scanTokens();

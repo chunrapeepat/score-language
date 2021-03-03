@@ -6,6 +6,7 @@ import {
   Unary,
   ExplicitType,
   Variable,
+  FunctionCall,
 } from "./Expr";
 import {
   VarStatement,
@@ -24,9 +25,12 @@ import {
   BreakStatement,
   ContinueStatement,
 } from "./Stmt";
+import { Token } from "./Token";
 import { TokenType } from "./TokenType";
 
 export class JSPrinter implements StmtVisitor<string>, ExprVisitor<string> {
+  private avoidJSReferenceError: boolean = false;
+
   print(statements: Stmt[]): string {
     let output = "";
     statements.forEach((statement) => {
@@ -108,17 +112,39 @@ export class JSPrinter implements StmtVisitor<string>, ExprVisitor<string> {
     return `${expr.expression.accept(this)};`;
   }
 
+  visitFunctionCallExpr(expr: FunctionCall): string {
+    this.avoidJSReferenceError = true;
+    const result = `this.functionCall("${
+      expr.name.lexeme
+    }", [${expr.args.map((e) => e.accept(this)).join(",")}])`;
+    this.avoidJSReferenceError = false;
+    return result;
+  }
   visitVariableExpr(variable: Variable): string {
+    if (this.avoidJSReferenceError) {
+      return `(typeof _${variable.name.lexeme} === "undefined" ? undefined : _${variable.name.lexeme})`;
+    }
     return `_${variable.name.lexeme}`;
   }
   visitExplicitTypeExpr(expr: ExplicitType): string {
-    // TODO: implement this later
-    return "";
+    switch (expr.type) {
+      case TokenType.TYPE_NUMBER:
+        return "type_number";
+      case TokenType.TYPE_STRING:
+        return "type_string";
+      case TokenType.TYPE_BOOLEAN:
+        return "type_boolean";
+      default:
+        return "type_any";
+    }
   }
   visitBinaryExpr(expr: Binary): string {
-    return `${expr.left.accept(this)} ${
-      expr.operator.lexeme
-    } ${expr.right.accept(this)}`;
+    let operator = expr.operator.lexeme;
+    if (expr.operator.type === TokenType.EQUAL_EQUAL) {
+      operator = "===";
+    }
+
+    return `${expr.left.accept(this)} ${operator} ${expr.right.accept(this)}`;
   }
   visitGroupingExpr(expr: Grouping): string {
     return `(${expr.expression.accept(this)})`;
