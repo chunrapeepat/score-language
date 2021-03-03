@@ -19,6 +19,7 @@ import {
   IfStatement,
   WhileStatement,
   RepeatStatement,
+  ExitStatement,
 } from "./Stmt";
 import { Token } from "./Token";
 import { TokenType } from "./TokenType";
@@ -83,6 +84,9 @@ export class Parser {
     }
     if (this.match(TokenType.REPEAT)) {
       return this.repeatStatement();
+    }
+    if (this.match(TokenType.EXIT)) {
+      return this.exitStatement();
     }
     return this.expressionStatement();
   }
@@ -217,6 +221,14 @@ export class Parser {
     }
 
     throw this.error(this.peek(), "invalid if statement");
+  }
+
+  private exitStatement(): Stmt {
+    this.consumeIdentifier(
+      "program",
+      `expect 'program' keyword after 'exit' statement.`
+    );
+    return new ExitStatement();
   }
 
   private playStatement(): Stmt {

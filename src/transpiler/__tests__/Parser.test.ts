@@ -12,6 +12,7 @@ import {
   IfStatement,
   WhileStatement,
   RepeatStatement,
+  ExitStatement,
 } from "../Stmt";
 import { Token } from "../Token";
 import { TokenType } from "../TokenType";
@@ -49,6 +50,18 @@ describe("parse error", () => {
 });
 
 describe("parse statements", () => {
+  it("should parse exit statement correctly", () => {
+    const input = `
+      exit program
+    `;
+
+    const expectedOutput = [new ExitStatement()];
+
+    const scanner = new Scanner(input);
+    const parser = new Parser(scanner.scanTokens());
+    expect(parser.parse()).toEqual(expectedOutput);
+  });
+
   it("should parse repeat statement correctly", () => {
     const input = `
       repeat 10 times then

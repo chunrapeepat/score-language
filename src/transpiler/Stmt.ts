@@ -9,6 +9,7 @@ export interface StmtVisitor<R> {
   visitPrintStatementStmt(stmt: PrintStatement): R;
   visitSayStatementStmt(stmt: SayStatement): R;
   visitPlayStatementStmt(stmt: PlayStatement): R;
+  visitExitStatementStmt(stmt: ExitStatement): R;
   visitIfStatementStmt(stmt: IfStatement): R;
   visitWhileStatementStmt(stmt: WhileStatement): R;
   visitRepeatStatementStmt(stmt: RepeatStatement): R;
@@ -108,6 +109,12 @@ export class PlayStatement implements Stmt {
 
   accept<R>(visitor: StmtVisitor<R>): R {
     return visitor.visitPlayStatementStmt(this);
+  }
+}
+
+export class ExitStatement implements Stmt {
+  accept<R>(visitor: StmtVisitor<R>): R {
+    return visitor.visitExitStatementStmt(this);
   }
 }
 
