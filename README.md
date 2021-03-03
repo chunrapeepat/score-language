@@ -4,7 +4,7 @@ TODO: Add description
 
 ## Context-free Grammar
 
-> Version number: 1.0
+> Version: 1.0
 
 ```sh
 program → statement* EOF
@@ -26,8 +26,10 @@ printStmt → "print" expression "\n"
 ifStmt → "if" expression "then" "\n" statement* "end" "\n"
 	| "if" expression "then" "\n" statement* "else" "\n" statement* "end" "\n"
 	| "if" expression "then" "\n" statement* "else" ifStmt
-whileStmt → "while" expression "then" "\n" statement* "end" "\n"
-repeatStmt → "repeat" expression ID["times"] "then" "\n" statement* "end" "\n"
+whileStmt → "while" expression "then" "\n" (statement | breakStmt | continueStmt)* "end" "\n"
+repeatStmt → "repeat" expression ID["times"] "then" "\n" (statement | breakStmt | continueStmt)* "end" "\n"
+breakStmt → "break" "\n"
+continueStmt → "continue" "\n"
 varStmt → "var" ID ("=" expression)? "\n"
 setStmt → "set" ID "=" expression "\n"
 sayStmt → "say" expression (ID["for"] expression ID["secs"])? "\n"
