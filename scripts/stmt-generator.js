@@ -6,7 +6,12 @@ const types = [
   "PrintStatement || value: Expr",
   "SayStatement || value: Expr, duration?: Expr",
   'PlayStatement || type: "note", value: Expr, duration?: Expr',
+  "ExitStatement || empty",
   "IfStatement || test: Expr, consequent: Stmt[], alternate?: IfStatement | Stmt[]",
+  "WhileStatement || test: Expr, body: Stmt[]",
+  "RepeatStatement || n: Expr, body: Stmt[]",
+  "BreakStatement || empty",
+  "ContinueStatement || empty",
 ];
 
 function defineAst(baseName, types) {
@@ -35,7 +40,7 @@ function defineType(baseName, type) {
     .map((x) => x.trim())
     .map((x) => x.split(":").map((y) => y.trim()));
 
-  console.log(`export class ${name} implements ${baseName} {
+  const constructor = `
     ${args.map((x) => `readonly ${x[0]}: ${x[1]};`).join("\n")}
   
     constructor(${argStr}) {
@@ -43,6 +48,10 @@ function defineType(baseName, type) {
         .map((x) => `this.${x[0].replace("?", "")} = ${x[0].replace("?", "")};`)
         .join("\n")}
     }
+  `;
+
+  console.log(`export class ${name} implements ${baseName} {
+    ${JSON.stringify(args).includes("empty") ? "" : constructor}
 
     accept<R>(visitor: ${baseName}Visitor<R>): R {
       return visitor.visit${name}${baseName}(this);

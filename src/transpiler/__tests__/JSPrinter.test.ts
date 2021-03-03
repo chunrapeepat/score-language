@@ -3,6 +3,69 @@ import { Parser } from "../Parser";
 import { Scanner } from "../Scanner";
 
 describe("translate the language to Javascript", () => {
+  it("should translate exit statement to JS correctly", () => {
+    const input = `exit program`;
+    const expectedOutput = `this.exitProgram();`;
+
+    const scanner = new Scanner(input);
+    const tokens = scanner.scanTokens();
+    const parser = new Parser(tokens);
+    const printer = new JSPrinter();
+    expect(printer.print(parser.parse())).toBe(expectedOutput);
+  });
+
+  it("should translate while loop with break or continue statement correctly", () => {
+    const input = `
+      while true then
+        if a < 10 then
+          continue
+        else 
+          break
+        end
+      end
+    `;
+    const expectedOutput = `while (true) {if (_a < 10) {continue;} else {break;}}`;
+
+    const scanner = new Scanner(input);
+    const tokens = scanner.scanTokens();
+    const parser = new Parser(tokens);
+    const printer = new JSPrinter();
+    expect(printer.print(parser.parse())).toBe(expectedOutput);
+  });
+
+  it("should translate repeat statement to JS correctly", () => {
+    const input = `
+      var n = 10
+      repeat n times then
+        print n
+      end
+    `;
+    const expectedOutput = `let _n = 10;{for (let i = 0; i < _n; ++i) {this.print(_n);}}`;
+
+    const scanner = new Scanner(input);
+    const tokens = scanner.scanTokens();
+    const parser = new Parser(tokens);
+    const printer = new JSPrinter();
+    expect(printer.print(parser.parse())).toBe(expectedOutput);
+  });
+
+  it("should translate while statement to JS correctly", () => {
+    const input = `
+      var a = 10
+      while a < 10 then
+        print a
+        set a = a + 1
+      end
+    `;
+    const expectedOutput = `let _a = 10;while (_a < 10) {this.print(_a);_a = _a + 1;}`;
+
+    const scanner = new Scanner(input);
+    const tokens = scanner.scanTokens();
+    const parser = new Parser(tokens);
+    const printer = new JSPrinter();
+    expect(printer.print(parser.parse())).toBe(expectedOutput);
+  });
+
   it("should translate if-else with else-if statement to JS correctly", () => {
     const input = `
       if a <= 3 then

@@ -17,6 +17,11 @@ import {
   SayStatement,
   PlayStatement,
   IfStatement,
+  WhileStatement,
+  RepeatStatement,
+  ExitStatement,
+  BreakStatement,
+  ContinueStatement,
 } from "./Stmt";
 import { Token } from "./Token";
 import { TokenType } from "./TokenType";
@@ -26,6 +31,7 @@ export class Parser {
   private readonly tokens: Token[];
   private current: number = 0;
   private errors: CompilationErrorInterface[] = [];
+  private allowBreakOrContinueStmt: boolean = false;
 
   constructor(tokens: Token[]) {
     this.tokens = tokens;
@@ -76,7 +82,131 @@ export class Parser {
     if (this.match(TokenType.IF)) {
       return this.ifStatement();
     }
+    if (this.match(TokenType.WHILE)) {
+      return this.whileStatement();
+    }
+    if (this.match(TokenType.REPEAT)) {
+      return this.repeatStatement();
+    }
+    if (this.match(TokenType.EXIT)) {
+      return this.exitStatement();
+    }
+    if (this.match(TokenType.CONTINUE)) {
+      return this.continueStatement();
+    }
+    if (this.match(TokenType.BREAK)) {
+      return this.breakStatement();
+    }
     return this.expressionStatement();
+  }
+
+  private breakStatement(): Stmt {
+    if (!this.allowBreakOrContinueStmt) {
+      throw this.error(this.previous(), "illegal break statement");
+    }
+
+    this.consume(TokenType.NEWLINE, `expect 'new line' after 'break' keyword`);
+    return new BreakStatement();
+  }
+
+  private continueStatement(): Stmt {
+    if (!this.allowBreakOrContinueStmt) {
+      throw this.error(this.previous(), "illegal continue statement");
+    }
+
+    this.consume(
+      TokenType.NEWLINE,
+      `expect 'new line' after 'continue' keyword`
+    );
+    return new ContinueStatement();
+  }
+
+  private repeatStatement(): Stmt {
+    const n: Expr = this.expression();
+    this.consumeIdentifier(
+      "times",
+      `expect 'times' keyword in 'while' statement.`
+    );
+    this.consume(TokenType.THEN, `expect 'then' after 'while' statement`);
+    this.consume(
+      TokenType.NEWLINE,
+      `expect 'new line' after 'then' keyword in 'while' statement`
+    );
+
+    this.allowBreakOrContinueStmt = true;
+    const body: Stmt[] = [];
+    while (!this.isAtEnd()) {
+      if (this.match(TokenType.NEWLINE)) continue;
+      if (this.peek().type === TokenType.END) break;
+
+      try {
+        body.push(this.statement());
+      } catch (e) {
+        this.errors.push(e);
+      }
+    }
+
+    if (this.match(TokenType.END)) {
+      this.consume(
+        TokenType.NEWLINE,
+        `expect 'new line' after 'end' keyword in 'while' statement`
+      );
+
+      this.allowBreakOrContinueStmt = false;
+      return new RepeatStatement(n, body);
+    }
+
+    throw this.error(this.peek(), "invalid repeat statement");
+  }
+
+  private whileStatement(): Stmt {
+    const test: Expr = this.expression();
+    this.consume(TokenType.THEN, `expect 'then' after 'while' statement`);
+    this.consume(
+      TokenType.NEWLINE,
+      `expect 'new line' after 'then' keyword in 'while' statement`
+    );
+
+    this.allowBreakOrContinueStmt = true;
+    const body: Stmt[] = [];
+    while (!this.isAtEnd()) {
+      if (this.match(TokenType.BREAK)) {
+        this.consume(
+          TokenType.NEWLINE,
+          `expect 'new line' after 'break' keyword`
+        );
+        body.push(new BreakStatement());
+        continue;
+      }
+      if (this.match(TokenType.CONTINUE)) {
+        this.consume(
+          TokenType.NEWLINE,
+          `expect 'new line' after 'continue' keyword`
+        );
+        body.push(new ContinueStatement());
+        continue;
+      }
+      if (this.match(TokenType.NEWLINE)) continue;
+      if (this.peek().type === TokenType.END) break;
+
+      try {
+        body.push(this.statement());
+      } catch (e) {
+        this.errors.push(e);
+      }
+    }
+
+    if (this.match(TokenType.END)) {
+      this.consume(
+        TokenType.NEWLINE,
+        `expect 'new line' after 'end' keyword in 'while' statement`
+      );
+
+      this.allowBreakOrContinueStmt = false;
+      return new WhileStatement(test, body);
+    }
+
+    throw this.error(this.peek(), "invalid while statement");
   }
 
   private ifStatement(): Stmt {
@@ -141,6 +271,14 @@ export class Parser {
     }
 
     throw this.error(this.peek(), "invalid if statement");
+  }
+
+  private exitStatement(): Stmt {
+    this.consumeIdentifier(
+      "program",
+      `expect 'program' keyword after 'exit' statement.`
+    );
+    return new ExitStatement();
   }
 
   private playStatement(): Stmt {

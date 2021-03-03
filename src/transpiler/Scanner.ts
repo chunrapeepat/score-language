@@ -133,6 +133,11 @@ export class Scanner {
     keywords["then"] = TokenType.THEN;
     keywords["else"] = TokenType.ELSE;
     keywords["end"] = TokenType.END;
+    keywords["while"] = TokenType.WHILE;
+    keywords["repeat"] = TokenType.REPEAT;
+    keywords["exit"] = TokenType.EXIT;
+    keywords["break"] = TokenType.BREAK;
+    keywords["continue"] = TokenType.CONTINUE;
 
     const text: string = this.source.substring(this.start, this.current);
     let type: TokenType = keywords[text];

@@ -9,7 +9,12 @@ export interface StmtVisitor<R> {
   visitPrintStatementStmt(stmt: PrintStatement): R;
   visitSayStatementStmt(stmt: SayStatement): R;
   visitPlayStatementStmt(stmt: PlayStatement): R;
+  visitExitStatementStmt(stmt: ExitStatement): R;
   visitIfStatementStmt(stmt: IfStatement): R;
+  visitWhileStatementStmt(stmt: WhileStatement): R;
+  visitRepeatStatementStmt(stmt: RepeatStatement): R;
+  visitBreakStatementStmt(stmt: BreakStatement): R;
+  visitContinueStatementStmt(stmt: ContinueStatement): R;
 }
 export interface Stmt {
   accept<R>(visitor: StmtVisitor<R>): R;
@@ -109,6 +114,12 @@ export class PlayStatement implements Stmt {
   }
 }
 
+export class ExitStatement implements Stmt {
+  accept<R>(visitor: StmtVisitor<R>): R {
+    return visitor.visitExitStatementStmt(this);
+  }
+}
+
 export class IfStatement implements Stmt {
   readonly test: Expr;
   readonly consequent: Stmt[];
@@ -126,5 +137,45 @@ export class IfStatement implements Stmt {
 
   accept<R>(visitor: StmtVisitor<R>): R {
     return visitor.visitIfStatementStmt(this);
+  }
+}
+
+export class WhileStatement implements Stmt {
+  readonly test: Expr;
+  readonly body: Stmt[];
+
+  constructor(test: Expr, body: Stmt[]) {
+    this.test = test;
+    this.body = body;
+  }
+
+  accept<R>(visitor: StmtVisitor<R>): R {
+    return visitor.visitWhileStatementStmt(this);
+  }
+}
+
+export class RepeatStatement implements Stmt {
+  readonly n: Expr;
+  readonly body: Stmt[];
+
+  constructor(n: Expr, body: Stmt[]) {
+    this.n = n;
+    this.body = body;
+  }
+
+  accept<R>(visitor: StmtVisitor<R>): R {
+    return visitor.visitRepeatStatementStmt(this);
+  }
+}
+
+export class BreakStatement implements Stmt {
+  accept<R>(visitor: StmtVisitor<R>): R {
+    return visitor.visitBreakStatementStmt(this);
+  }
+}
+
+export class ContinueStatement implements Stmt {
+  accept<R>(visitor: StmtVisitor<R>): R {
+    return visitor.visitContinueStatementStmt(this);
   }
 }

@@ -20,6 +20,67 @@ describe("scanner should throw error", () => {
 });
 
 describe("scanner should return a list of token correctly with EOF at the end", () => {
+  test("break and continue statements", () => {
+    const input = `break continue`;
+    const expectedOutput = [
+      new Token(TokenType.BREAK, "break", null, 1),
+      new Token(TokenType.CONTINUE, "continue", null, 1),
+
+      new Token(TokenType.NEWLINE, "\n", null, 1),
+      new Token(TokenType.EOF, "", null, 2),
+    ];
+
+    const scanner = new Scanner(input);
+    expect(scanner.scanTokens()).toEqual(expectedOutput);
+  });
+
+  test("exit statement", () => {
+    const input = `exit program`;
+    const expectedOutput = [
+      new Token(TokenType.EXIT, "exit", null, 1),
+      new Token(TokenType.IDENTIFIER, "program", null, 1),
+
+      new Token(TokenType.NEWLINE, "\n", null, 1),
+      new Token(TokenType.EOF, "", null, 2),
+    ];
+
+    const scanner = new Scanner(input);
+    expect(scanner.scanTokens()).toEqual(expectedOutput);
+  });
+
+  test("repeat statement", () => {
+    const input = `repeat 10 times then end`;
+    const expectedOutput = [
+      new Token(TokenType.REPEAT, "repeat", null, 1),
+      new Token(TokenType.NUMBER, "10", 10, 1),
+      new Token(TokenType.IDENTIFIER, "times", null, 1),
+      new Token(TokenType.THEN, "then", null, 1),
+      new Token(TokenType.END, "end", null, 1),
+
+      new Token(TokenType.NEWLINE, "\n", null, 1),
+      new Token(TokenType.EOF, "", null, 2),
+    ];
+
+    const scanner = new Scanner(input);
+    expect(scanner.scanTokens()).toEqual(expectedOutput);
+  });
+
+  test("while statement", () => {
+    const input = `while true then end`;
+    const expectedOutput = [
+      new Token(TokenType.WHILE, "while", null, 1),
+      new Token(TokenType.TRUE, "true", null, 1),
+      new Token(TokenType.THEN, "then", null, 1),
+      new Token(TokenType.END, "end", null, 1),
+
+      new Token(TokenType.NEWLINE, "\n", null, 1),
+      new Token(TokenType.EOF, "", null, 2),
+    ];
+
+    const scanner = new Scanner(input);
+    expect(scanner.scanTokens()).toEqual(expectedOutput);
+  });
+
   test("if statement", () => {
     const input = `if then else end`;
     const expectedOutput = [

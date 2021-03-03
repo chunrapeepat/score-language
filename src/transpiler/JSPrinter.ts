@@ -18,6 +18,11 @@ import {
   WaitStatement,
   PlayStatement,
   IfStatement,
+  WhileStatement,
+  RepeatStatement,
+  ExitStatement,
+  BreakStatement,
+  ContinueStatement,
 } from "./Stmt";
 import { TokenType } from "./TokenType";
 
@@ -30,6 +35,25 @@ export class JSPrinter implements StmtVisitor<string>, ExprVisitor<string> {
     return output.trim();
   }
 
+  visitBreakStatementStmt(_: BreakStatement): string {
+    return `break;`;
+  }
+  visitContinueStatementStmt(_: ContinueStatement): string {
+    return `continue;`;
+  }
+  visitExitStatementStmt(_: ExitStatement): string {
+    return `this.exitProgram();`;
+  }
+  visitRepeatStatementStmt(statement: RepeatStatement): string {
+    return `{for (let i = 0; i < ${statement.n.accept(
+      this
+    )}; ++i) {${statement.body.map((s) => s.accept(this)).join("")}}}`;
+  }
+  visitWhileStatementStmt(statement: WhileStatement): string {
+    return `while (${statement.test.accept(this)}) {${statement.body
+      .map((s) => s.accept(this))
+      .join("")}}`;
+  }
   visitIfStatementStmt(statement: IfStatement): string {
     if (!statement.alternate) {
       return `if (${statement.test.accept(
