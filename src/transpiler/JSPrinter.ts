@@ -20,6 +20,7 @@ import {
   IfStatement,
   WhileStatement,
   RepeatStatement,
+  ExitStatement,
 } from "./Stmt";
 import { TokenType } from "./TokenType";
 
@@ -32,6 +33,9 @@ export class JSPrinter implements StmtVisitor<string>, ExprVisitor<string> {
     return output.trim();
   }
 
+  visitExitStatementStmt(_: ExitStatement): string {
+    return `this.exitProgram();`;
+  }
   visitRepeatStatementStmt(statement: RepeatStatement): string {
     return `{for (let i = 0; i < ${statement.n.accept(
       this
