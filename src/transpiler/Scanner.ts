@@ -135,6 +135,7 @@ export class Scanner {
     keywords["end"] = TokenType.END;
     keywords["while"] = TokenType.WHILE;
     keywords["repeat"] = TokenType.REPEAT;
+    keywords["exit"] = TokenType.EXIT;
 
     const text: string = this.source.substring(this.start, this.current);
     let type: TokenType = keywords[text];

@@ -19,6 +19,7 @@ statement → exprStmt
 	| sayStmt
 	| waitStmt
 	| playStmt
+	| exitStmt
 	| "\n"
 exprStmt → expression "\n"
 printStmt → "print" expression "\n"
@@ -32,6 +33,7 @@ setStmt → "set" ID "=" expression "\n"
 sayStmt → "say" expression (ID["for"] expression ID["secs"])? "\n"
 waitStmt → "wait" expression ID["secs"] "\n"
 playStmt → "play" ID["note"] expression (ID["for"] expression ID["secs"])? "\n"
+exitStmt → "exit" ID["program"] "\n"
 
 expression → logic_or
 logic_or → logic_and ("or" logic_and)*

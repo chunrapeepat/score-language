@@ -20,6 +20,20 @@ describe("scanner should throw error", () => {
 });
 
 describe("scanner should return a list of token correctly with EOF at the end", () => {
+  test("exit statement", () => {
+    const input = `exit program`;
+    const expectedOutput = [
+      new Token(TokenType.EXIT, "exit", null, 1),
+      new Token(TokenType.IDENTIFIER, "program", null, 1),
+
+      new Token(TokenType.NEWLINE, "\n", null, 1),
+      new Token(TokenType.EOF, "", null, 2),
+    ];
+
+    const scanner = new Scanner(input);
+    expect(scanner.scanTokens()).toEqual(expectedOutput);
+  });
+
   test("repeat statement", () => {
     const input = `repeat 10 times then end`;
     const expectedOutput = [
