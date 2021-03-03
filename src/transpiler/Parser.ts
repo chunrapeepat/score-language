@@ -20,6 +20,8 @@ import {
   WhileStatement,
   RepeatStatement,
   ExitStatement,
+  BreakStatement,
+  ContinueStatement,
 } from "./Stmt";
 import { Token } from "./Token";
 import { TokenType } from "./TokenType";
@@ -105,6 +107,22 @@ export class Parser {
 
     const body: Stmt[] = [];
     while (!this.isAtEnd()) {
+      if (this.match(TokenType.BREAK)) {
+        this.consume(
+          TokenType.NEWLINE,
+          `expect 'new line' after 'break' keyword`
+        );
+        body.push(new BreakStatement());
+        continue;
+      }
+      if (this.match(TokenType.CONTINUE)) {
+        this.consume(
+          TokenType.NEWLINE,
+          `expect 'new line' after 'continue' keyword`
+        );
+        body.push(new ContinueStatement());
+        continue;
+      }
       if (this.match(TokenType.NEWLINE)) continue;
       if (this.peek().type === TokenType.END) break;
 
@@ -137,6 +155,22 @@ export class Parser {
 
     const body: Stmt[] = [];
     while (!this.isAtEnd()) {
+      if (this.match(TokenType.BREAK)) {
+        this.consume(
+          TokenType.NEWLINE,
+          `expect 'new line' after 'break' keyword`
+        );
+        body.push(new BreakStatement());
+        continue;
+      }
+      if (this.match(TokenType.CONTINUE)) {
+        this.consume(
+          TokenType.NEWLINE,
+          `expect 'new line' after 'continue' keyword`
+        );
+        body.push(new ContinueStatement());
+        continue;
+      }
       if (this.match(TokenType.NEWLINE)) continue;
       if (this.peek().type === TokenType.END) break;
 

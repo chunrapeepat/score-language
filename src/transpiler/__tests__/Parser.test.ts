@@ -13,12 +13,29 @@ import {
   WhileStatement,
   RepeatStatement,
   ExitStatement,
+  BreakStatement,
+  ContinueStatement,
 } from "../Stmt";
 import { Token } from "../Token";
 import { TokenType } from "../TokenType";
 import { SyntaxError } from "../Error";
 
 describe("parse error", () => {
+  it("should parse error when use continue or break statement outside while and repeat", () => {
+    const input = `
+      break
+      repeat 10 times then
+        continue
+      end
+    `;
+
+    const scanner = new Scanner(input);
+    const parser = new Parser(scanner.scanTokens());
+    expect(() => parser.parse()).toThrow(Error);
+    expect(parser.getErrors().length).toBe(1);
+    expect(parser.getErrors()[0].getLine()).toBe(2);
+  });
+
   it("should detect multiple errors", () => {
     const input = `!-+\n\n(10\n\n+`;
 
@@ -50,6 +67,27 @@ describe("parse error", () => {
 });
 
 describe("parse statements", () => {
+  it("should parse break and continue statements in repeat and while correctly", () => {
+    const input = `
+      repeat 10 times then
+        continue
+      end
+
+      while true then
+        break
+      end
+    `;
+
+    const expectedOutput = [
+      new RepeatStatement(new Literal(10), [new ContinueStatement()]),
+      new WhileStatement(new Literal(true), [new BreakStatement()]),
+    ];
+
+    const scanner = new Scanner(input);
+    const parser = new Parser(scanner.scanTokens());
+    expect(parser.parse()).toEqual(expectedOutput);
+  });
+
   it("should parse exit statement correctly", () => {
     const input = `
       exit program

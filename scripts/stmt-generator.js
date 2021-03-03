@@ -10,6 +10,8 @@ const types = [
   "IfStatement || test: Expr, consequent: Stmt[], alternate?: IfStatement | Stmt[]",
   "WhileStatement || test: Expr, body: Stmt[]",
   "RepeatStatement || n: Expr, body: Stmt[]",
+  "BreakStatement || empty",
+  "ContinueStatement || empty",
 ];
 
 function defineAst(baseName, types) {
