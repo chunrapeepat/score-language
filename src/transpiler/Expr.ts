@@ -7,6 +7,7 @@ export interface ExprVisitor<R> {
   visitUnaryExpr(expr: Unary): R;
   visitExplicitTypeExpr(expr: ExplicitType): R;
   visitVariableExpr(expr: Variable): R;
+  visitFunctionCallExpr(expr: FunctionCall): R;
 }
 export interface Expr {
   accept<R>(visitor: ExprVisitor<R>): R;
@@ -87,5 +88,19 @@ export class Variable implements Expr {
 
   accept<R>(visitor: ExprVisitor<R>): R {
     return visitor.visitVariableExpr(this);
+  }
+}
+
+export class FunctionCall implements Expr {
+  readonly name: Token;
+  readonly args: Expr[];
+
+  constructor(name: Token, args: Expr[]) {
+    this.name = name;
+    this.args = args;
+  }
+
+  accept<R>(visitor: ExprVisitor<R>): R {
+    return visitor.visitFunctionCallExpr(this);
   }
 }

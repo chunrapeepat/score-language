@@ -1,4 +1,11 @@
-import { Binary, Grouping, Literal, Unary, Variable } from "../Expr";
+import {
+  Binary,
+  FunctionCall,
+  Grouping,
+  Literal,
+  Unary,
+  Variable,
+} from "../Expr";
 import { Parser } from "../Parser";
 import { Scanner } from "../Scanner";
 import {
@@ -396,6 +403,24 @@ describe("parse statements", () => {
 });
 
 describe("parse expression statement", () => {
+  test("function call expression", () => {
+    const input = `[random from 1 to 10]`;
+    const expectedOutput = [
+      new Expression(
+        new FunctionCall(new Token(TokenType.IDENTIFIER, "random", null, 1), [
+          new Variable(new Token(TokenType.IDENTIFIER, "from", null, 1)),
+          new Literal(1),
+          new Variable(new Token(TokenType.IDENTIFIER, "to", null, 1)),
+          new Literal(10),
+        ])
+      ),
+    ];
+
+    const scanner = new Scanner(input);
+    const parser = new Parser(scanner.scanTokens());
+    expect(parser.parse()).toEqual(expectedOutput);
+  });
+
   test("unary operator should have associativity from right to left", () => {
     const input = `!!!true`;
     const expectedOutput = [

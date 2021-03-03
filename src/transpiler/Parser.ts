@@ -6,6 +6,7 @@ import {
   Unary,
   ExplicitType,
   Variable,
+  FunctionCall,
 } from "./Expr";
 import {
   Stmt,
@@ -427,8 +428,30 @@ export class Parser {
       const right: Expr = this.unary();
       return new Unary(operator, right);
     }
+    if (this.match(TokenType.LEFT_BRACKET)) {
+      return this.functionCall();
+    }
 
     return this.primary();
+  }
+
+  private functionCall(): Expr {
+    const functionName = this.consume(
+      TokenType.IDENTIFIER,
+      "expect function name after '['"
+    );
+
+    const args: Expr[] = [];
+    while (this.peek().type !== TokenType.RIGHT_BRACKET) {
+      try {
+        args.push(this.expression());
+      } catch (e) {
+        this.errors.push(e);
+      }
+    }
+
+    this.consume(TokenType.RIGHT_BRACKET, "expect ']' after function call");
+    return new FunctionCall(functionName, args);
   }
 
   private primary(): Expr {
