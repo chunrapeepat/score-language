@@ -3,6 +3,20 @@ import { Parser } from "../Parser";
 import { Scanner } from "../Scanner";
 
 describe("translate the language to Javascript", () => {
+  it("should translate function call to JS correctly", () => {
+    const input = `
+      var rand = [random 1 to 100]
+      set rand = rand + 1
+    `;
+    const expectedOutput = `let _rand = this.functionCall("random", [1,(typeof _to === "undefined" ? undefined : _to),100]);_rand = _rand + 1;`;
+
+    const scanner = new Scanner(input);
+    const tokens = scanner.scanTokens();
+    const parser = new Parser(tokens);
+    const printer = new JSPrinter();
+    expect(printer.print(parser.parse())).toBe(expectedOutput);
+  });
+
   it("should translate exit statement to JS correctly", () => {
     const input = `exit program`;
     const expectedOutput = `this.exitProgram();`;
