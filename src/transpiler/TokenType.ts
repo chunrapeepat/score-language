@@ -49,4 +49,6 @@ export enum TokenType {
   WHILE,
   REPEAT,
   EXIT,
+  BREAK,
+  CONTINUE,
 }
