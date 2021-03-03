@@ -95,7 +95,7 @@ describe("translate the language to Javascript", () => {
         print "a is greater than 3"
       end
     `;
-    const expectedOutput = `if (_a <= 3) {if (_a == 2) {this.print("a is 2");}} else {this.print("a is greater than 3");}`;
+    const expectedOutput = `if (_a <= 3) {if (_a === 2) {this.print("a is 2");}} else {this.print("a is greater than 3");}`;
 
     const scanner = new Scanner(input);
     const tokens = scanner.scanTokens();
@@ -222,7 +222,7 @@ describe("translate the language to Javascript", () => {
       !(1 <= 10) == true
       not (10 == 10) == false
     `;
-    const expectedOutput = `!(1 <= 10) == true;!(10 == 10) == false;`;
+    const expectedOutput = `!(1 <= 10) === true;!(10 === 10) === false;`;
 
     const scanner = new Scanner(input);
     const tokens = scanner.scanTokens();

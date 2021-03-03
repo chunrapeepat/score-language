@@ -24,6 +24,7 @@ import {
   BreakStatement,
   ContinueStatement,
 } from "./Stmt";
+import { Token } from "./Token";
 import { TokenType } from "./TokenType";
 
 export class JSPrinter implements StmtVisitor<string>, ExprVisitor<string> {
@@ -116,9 +117,12 @@ export class JSPrinter implements StmtVisitor<string>, ExprVisitor<string> {
     return "";
   }
   visitBinaryExpr(expr: Binary): string {
-    return `${expr.left.accept(this)} ${
-      expr.operator.lexeme
-    } ${expr.right.accept(this)}`;
+    let operator = expr.operator.lexeme;
+    if (expr.operator.type === TokenType.EQUAL_EQUAL) {
+      operator = "===";
+    }
+
+    return `${expr.left.accept(this)} ${operator} ${expr.right.accept(this)}`;
   }
   visitGroupingExpr(expr: Grouping): string {
     return `(${expr.expression.accept(this)})`;

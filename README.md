@@ -47,9 +47,7 @@ comparison → term (( ">" | ">=" | "<" | "<=" ) term)*
 term → factor (( "-" | "+" ) factor)*
 factor → unary (( "/" | "*" | "mod" ) unary)*
 unary → ( "not" | "-" | "+" ) unary | primary | functionCall
-functionCall → "[" functionName arguments? "]"
-functionName → ID
-arguments → expression*
+functionCall → "[" ID expression* "]"
 primary → NUMBER
 	| STRING
 	| "number" | "string" | "boolean"
