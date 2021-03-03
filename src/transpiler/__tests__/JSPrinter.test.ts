@@ -14,6 +14,25 @@ describe("translate the language to Javascript", () => {
     expect(printer.print(parser.parse())).toBe(expectedOutput);
   });
 
+  it("should translate while loop with break or continue statement correctly", () => {
+    const input = `
+      while true then
+        if a < 10 then
+          continue
+        else 
+          break
+        end
+      end
+    `;
+    const expectedOutput = `while (true) {if (_a < 10) {continue;} else {break;}}`;
+
+    const scanner = new Scanner(input);
+    const tokens = scanner.scanTokens();
+    const parser = new Parser(tokens);
+    const printer = new JSPrinter();
+    expect(printer.print(parser.parse())).toBe(expectedOutput);
+  });
+
   it("should translate repeat statement to JS correctly", () => {
     const input = `
       var n = 10

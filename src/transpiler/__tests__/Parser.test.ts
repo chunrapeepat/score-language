@@ -74,13 +74,17 @@ describe("parse statements", () => {
       end
 
       while true then
-        break
+        if true then
+          break
+        end
       end
     `;
 
     const expectedOutput = [
       new RepeatStatement(new Literal(10), [new ContinueStatement()]),
-      new WhileStatement(new Literal(true), [new BreakStatement()]),
+      new WhileStatement(new Literal(true), [
+        new IfStatement(new Literal(true), [new BreakStatement()]),
+      ]),
     ];
 
     const scanner = new Scanner(input);

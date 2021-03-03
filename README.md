@@ -20,14 +20,16 @@ statement → exprStmt
 	| waitStmt
 	| playStmt
 	| exitStmt
+	| breakStmt
+	| continueStmt
 	| "\n"
 exprStmt → expression "\n"
 printStmt → "print" expression "\n"
 ifStmt → "if" expression "then" "\n" statement* "end" "\n"
 	| "if" expression "then" "\n" statement* "else" "\n" statement* "end" "\n"
 	| "if" expression "then" "\n" statement* "else" ifStmt
-whileStmt → "while" expression "then" "\n" (statement | breakStmt | continueStmt)* "end" "\n"
-repeatStmt → "repeat" expression ID["times"] "then" "\n" (statement | breakStmt | continueStmt)* "end" "\n"
+whileStmt → "while" expression "then" "\n" statement* "end" "\n"
+repeatStmt → "repeat" expression ID["times"] "then" "\n" statement* "end" "\n"
 breakStmt → "break" "\n"
 continueStmt → "continue" "\n"
 varStmt → "var" ID ("=" expression)? "\n"

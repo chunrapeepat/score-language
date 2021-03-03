@@ -21,6 +21,8 @@ import {
   WhileStatement,
   RepeatStatement,
   ExitStatement,
+  BreakStatement,
+  ContinueStatement,
 } from "./Stmt";
 import { TokenType } from "./TokenType";
 
@@ -33,6 +35,12 @@ export class JSPrinter implements StmtVisitor<string>, ExprVisitor<string> {
     return output.trim();
   }
 
+  visitBreakStatementStmt(_: BreakStatement): string {
+    return `break;`;
+  }
+  visitContinueStatementStmt(_: ContinueStatement): string {
+    return `continue;`;
+  }
   visitExitStatementStmt(_: ExitStatement): string {
     return `this.exitProgram();`;
   }
