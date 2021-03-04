@@ -1,9 +1,10 @@
 import React from "react";
+import Editor from "./Editor";
 
 function App() {
   return (
     <div>
-      <h1>Hello World</h1>
+      <Editor />
     </div>
   );
 }
