@@ -3,6 +3,13 @@ import { Parser } from "../transpiler/Parser";
 import { Scanner } from "../transpiler/Scanner";
 import { Stmt } from "../transpiler/Stmt";
 import { Token } from "../transpiler/Token";
+import { ScoreRuntimeContext } from "./ScoreRuntimeContext";
+
+declare global {
+  interface Window {
+    runtimeContext?: ScoreRuntimeContext;
+  }
+}
 
 export class ScoreEngine {
   private code: string;
@@ -16,6 +23,18 @@ export class ScoreEngine {
 
   public getErrors(): Error[] {
     return this.errors;
+  }
+
+  public execute(): boolean {
+    if (this.compiledCode === null || this.errors.length > 0) {
+      return false;
+    }
+
+    window.runtimeContext = new ScoreRuntimeContext();
+    eval(
+      `(async function() {try {${this.compiledCode}} catch(e) {this.handleError(e)}}).call(window.runtimeContext)`
+    );
+    return true;
   }
 
   public compile(): boolean {

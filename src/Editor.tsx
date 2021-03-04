@@ -1,10 +1,16 @@
 import React, { useState } from "react";
+import { ScoreEngine } from "./runtime-system/ScoreEngine";
 
 function Editor() {
   const [code, setCode] = useState<string>("");
 
   const handleSubmit = () => {
-    console.log("code =", code);
+    const engine = new ScoreEngine(code);
+    if (!engine.compile()) {
+      return console.error(engine.getErrors());
+    }
+
+    engine.execute();
   };
 
   return (
