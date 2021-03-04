@@ -143,6 +143,9 @@ export class JSPrinter implements StmtVisitor<string>, ExprVisitor<string> {
     if (expr.operator.type === TokenType.EQUAL_EQUAL) {
       operator = "===";
     }
+    if (expr.operator.type === TokenType.MOD) {
+      operator = "%";
+    }
 
     return `${expr.left.accept(this)} ${operator} ${expr.right.accept(this)}`;
   }

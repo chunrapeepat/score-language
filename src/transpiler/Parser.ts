@@ -413,7 +413,7 @@ export class Parser {
   private factor(): Expr {
     let expr: Expr = this.unary();
 
-    while (this.match(TokenType.SLASH, TokenType.STAR)) {
+    while (this.match(TokenType.SLASH, TokenType.STAR, TokenType.MOD)) {
       const operator: Token = this.previous();
       const right: Expr = this.term();
       expr = new Binary(expr, operator, right);
