@@ -403,6 +403,27 @@ describe("parse statements", () => {
 });
 
 describe("parse expression statement", () => {
+  test("and, or operators", () => {
+    const input = `true and false or true`;
+    const expectedOutput = [
+      new Expression(
+        new Binary(
+          new Binary(
+            new Literal(true),
+            new Token(TokenType.AND, "and", null, 1),
+            new Literal(false)
+          ),
+          new Token(TokenType.OR, "or", null, 1),
+          new Literal(true)
+        )
+      ),
+    ];
+
+    const scanner = new Scanner(input);
+    const parser = new Parser(scanner.scanTokens());
+    expect(parser.parse()).toEqual(expectedOutput);
+  });
+
   test("mod operator", () => {
     const input = `3 mod 2`;
     const expectedOutput = [

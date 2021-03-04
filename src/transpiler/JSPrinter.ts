@@ -139,12 +139,22 @@ export class JSPrinter implements StmtVisitor<string>, ExprVisitor<string> {
     }
   }
   visitBinaryExpr(expr: Binary): string {
-    let operator = expr.operator.lexeme;
-    if (expr.operator.type === TokenType.EQUAL_EQUAL) {
-      operator = "===";
-    }
-    if (expr.operator.type === TokenType.MOD) {
-      operator = "%";
+    let operator;
+    switch (expr.operator.type) {
+      case TokenType.EQUAL_EQUAL:
+        operator = "===";
+        break;
+      case TokenType.MOD:
+        operator = "%";
+        break;
+      case TokenType.AND:
+        operator = "&&";
+        break;
+      case TokenType.OR:
+        operator = "||";
+        break;
+      default:
+        operator = expr.operator.lexeme;
     }
 
     return `${expr.left.accept(this)} ${operator} ${expr.right.accept(this)}`;
