@@ -44,7 +44,9 @@ export class ScoreRuntimeContext {
     console.log("play note", note, duration);
   };
   public wait = async (seconds: number): Promise<void> => {
-    console.log("wait for", seconds);
+    return new Promise((resolve, _) => {
+      setTimeout(resolve, seconds * 1000);
+    });
   };
   public say = (object: any): void => {
     console.log("say", object);
