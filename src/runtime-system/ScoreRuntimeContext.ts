@@ -1,5 +1,7 @@
+import { throws } from "assert";
 import * as Tone from "tone";
 import { TypeError, InvalidArgumentError } from "./Error";
+import { random } from "./native-functions";
 
 enum PrintType {
   INFO = "info",
@@ -9,19 +11,13 @@ enum PrintType {
 
 export class ScoreRuntimeContext {
   private _functions: { [key: string]: { head: string; fn: Function } } = {
-    random: {
-      head: "random from $from to $to",
-      fn: ({ from, to }: any) => {
-        console.log("random", from, to);
-        return Math.random();
-      },
-    },
+    random,
   };
 
   // utility functions
   public functionCall = (functionName: string, args: any[]): any => {
     if (!this._functions[functionName]) {
-      // TODO: handle error: function not found
+      throw new ReferenceError(`function ${functionName} is not defined`);
     }
 
     const params = this._extractParams(
