@@ -1,3 +1,6 @@
+import * as Tone from "tone";
+import { TypeError, InvalidArgumentError } from "./Error";
+
 enum PrintType {
   INFO = "info",
   ERROR = "error",
@@ -37,15 +40,40 @@ export class ScoreRuntimeContext {
         `Reference error: ${e.message.replace("_", "")}`,
         PrintType.ERROR
       );
+    } else if (e instanceof TypeError) {
+      this._print(`Type error: ${e.message}`, PrintType.ERROR);
+    } else if (e instanceof InvalidArgumentError) {
+      this._print(`Invalid argument error: ${e.message}`, PrintType.ERROR);
     } else {
       this._print(`${e.name}: ${e.message}`, PrintType.ERROR);
     }
   };
 
   // statements
-  public playNote = async (note: number, duration: number): Promise<void> => {
-    console.log("play note", note, duration);
+  public playNote = (note: number, duration: number = 0.5): Promise<void> => {
+    if (typeof note !== "number" || typeof duration !== "number") {
+      throw new TypeError("play note statement arguments must be number");
+    }
+    if (note < 0) {
+      throw new InvalidArgumentError(
+        "note in play statement must be positive number"
+      );
+    }
+
+    const notes = ["C#", "D", "D#", "E", "F", "G", "G#", "A", "A#", "B", "C"];
+    const synth = new Tone.Synth().toDestination();
+    const delay = 150;
+    return new Promise((resolve, _) => {
+      synth.triggerAttackRelease(
+        `${notes[(note - 1) % notes.length]}${
+          4 + Math.floor(note / notes.length)
+        }`,
+        duration
+      );
+      setTimeout(resolve, duration * 1000 + delay);
+    });
   };
+
   public wait = async (seconds: number): Promise<void> => {
     return new Promise((resolve, _) => {
       setTimeout(resolve, seconds * 1000);
