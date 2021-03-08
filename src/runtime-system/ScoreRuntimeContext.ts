@@ -27,16 +27,18 @@ export class ScoreRuntimeContext {
     return this._functions[functionName].fn(params);
   };
   public handleError = (e: Error): void => {
+    if (e.message === "score_runtime_exit") {
+      return;
+    }
+
     if (e instanceof ReferenceError) {
       this._print(
-        `reference error: ${e.message.replace("_", "")}`,
+        `Reference error: ${e.message.replace("_", "")}`,
         PrintType.ERROR
       );
     } else {
       this._print(e.message, PrintType.ERROR);
     }
-
-    this.exitProgram();
   };
 
   // statements
@@ -51,7 +53,9 @@ export class ScoreRuntimeContext {
   public say = (object: any): void => {
     console.log("say", object);
   };
-  public exitProgram = (): void => {};
+  public exitProgram = (): void => {
+    throw new Error("score_runtime_exit");
+  };
   public print = (message: string): void => {
     this._print(message);
   };
