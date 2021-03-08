@@ -1,6 +1,7 @@
 enum PrintType {
-  INFO,
-  ERROR,
+  INFO = "info",
+  ERROR = "error",
+  WARNING = "warning",
 }
 
 export class ScoreRuntimeContext {
@@ -37,7 +38,7 @@ export class ScoreRuntimeContext {
         PrintType.ERROR
       );
     } else {
-      this._print(e.message, PrintType.ERROR);
+      this._print(`${e.name}: ${e.message}`, PrintType.ERROR);
     }
   };
 
@@ -50,17 +51,40 @@ export class ScoreRuntimeContext {
       setTimeout(resolve, seconds * 1000);
     });
   };
-  public say = (object: any): void => {
-    console.log("say", object);
+  public say = (object: any): Promise<void> => {
+    if (!("speechSynthesis" in window)) {
+      this._print(
+        "Warning: your browser doesn't support text to speech!",
+        PrintType.WARNING
+      );
+    }
+
+    return new Promise((resolve, _) => {
+      const msg = new SpeechSynthesisUtterance();
+      msg.text = String(object);
+      msg.rate = 1.2;
+      if (this._isAnyThaiChar(String(object))) {
+        msg.lang = "th-TH";
+      }
+      speechSynthesis.speak(msg);
+
+      msg.onend = (_) => {
+        resolve();
+      };
+    });
   };
   public exitProgram = (): void => {
     throw new Error("score_runtime_exit");
   };
-  public print = (message: string): void => {
-    this._print(message);
+  public print = (object: any): void => {
+    this._print(String(object));
   };
 
   // helper functions
+  private _isAnyThaiChar(message: string): boolean {
+    const thaiCharRegex = /([\u0E00-\u0E7F]+)/gmu;
+    return thaiCharRegex.exec(message) !== null;
+  }
   private _print(message: string, type: PrintType = PrintType.INFO): void {
     const elem = document.getElementById("score_runtime_output");
     if (!elem) return;
@@ -71,6 +95,9 @@ export class ScoreRuntimeContext {
 
     if (type === PrintType.ERROR) {
       node.setAttribute("style", "color: red");
+    }
+    if (type === PrintType.WARNING) {
+      node.setAttribute("style", "color: orange");
     }
 
     elem.appendChild(node);
