@@ -1,7 +1,7 @@
 import { throws } from "assert";
 import * as Tone from "tone";
 import { TypeError, InvalidArgumentError } from "./Error";
-import { random } from "./native-functions";
+import * as nativeFunctions from "./native-functions";
 
 enum PrintType {
   INFO = "info",
@@ -11,7 +11,10 @@ enum PrintType {
 
 export class ScoreRuntimeContext {
   private _functions: { [key: string]: { head: string; fn: Function } } = {
-    random,
+    random: {
+      head: "random from $from to $to",
+      fn: nativeFunctions.random,
+    },
   };
 
   // utility functions

@@ -7,7 +7,7 @@ describe("function: random from <from> to <to>", () => {
     const to = 20;
 
     for (let i = 0; i < 100; ++i) {
-      const randomNumber = random.fn({ from, to });
+      const randomNumber = random({ from, to });
       expect(randomNumber).toBeGreaterThanOrEqual(from);
       expect(randomNumber).toBeLessThanOrEqual(to);
     }
@@ -18,7 +18,7 @@ describe("function: random from <from> to <to>", () => {
     const to = 10;
 
     for (let i = 0; i < 100; ++i) {
-      const randomNumber = random.fn({ from, to });
+      const randomNumber = random({ from, to });
       expect(randomNumber).toBeGreaterThanOrEqual(to);
       expect(randomNumber).toBeLessThanOrEqual(from);
     }
@@ -28,6 +28,6 @@ describe("function: random from <from> to <to>", () => {
     const from = "hello" as any;
     const to = 20;
 
-    expect(() => random.fn({ from, to })).toThrow(InvalidArgumentError);
+    expect(() => random({ from, to })).toThrow(InvalidArgumentError);
   });
 });
