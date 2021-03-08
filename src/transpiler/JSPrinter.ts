@@ -129,13 +129,13 @@ export class JSPrinter implements StmtVisitor<string>, ExprVisitor<string> {
   visitExplicitTypeExpr(expr: ExplicitType): string {
     switch (expr.type) {
       case TokenType.TYPE_NUMBER:
-        return "type_number";
+        return `"type_number"`;
       case TokenType.TYPE_STRING:
-        return "type_string";
+        return `"type_string"`;
       case TokenType.TYPE_BOOLEAN:
-        return "type_boolean";
+        return `"type_boolean"`;
       default:
-        return "type_any";
+        return `"type_any"`;
     }
   }
   visitBinaryExpr(expr: Binary): string {

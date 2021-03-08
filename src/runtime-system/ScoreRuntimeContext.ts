@@ -1,4 +1,3 @@
-import { throws } from "assert";
 import * as Tone from "tone";
 import { TypeError, InvalidArgumentError } from "./Error";
 import * as nativeFunctions from "./native-functions";
@@ -14,6 +13,10 @@ export class ScoreRuntimeContext {
     random: {
       head: "random from $from to $to",
       fn: nativeFunctions.random,
+    },
+    ask: {
+      head: "ask $object as $type",
+      fn: nativeFunctions.ask,
     },
   };
 
@@ -78,7 +81,13 @@ export class ScoreRuntimeContext {
       setTimeout(resolve, seconds * 1000);
     });
   };
-  public say = (object: any): Promise<void> => {
+  public say = (object: any, duration: number = 1): Promise<void> => {
+    // TODO: Change duration to speed or rate instead
+    if (typeof duration !== "number" || duration < 0) {
+      throw new InvalidArgumentError(
+        "say statement's duration must be positive number"
+      );
+    }
     if (!("speechSynthesis" in window)) {
       this._print(
         "Warning: your browser doesn't support text to speech!",
@@ -89,7 +98,7 @@ export class ScoreRuntimeContext {
     return new Promise((resolve, _) => {
       const msg = new SpeechSynthesisUtterance();
       msg.text = String(object);
-      msg.rate = 1.2;
+      msg.rate = 1;
       if (this._isAnyThaiChar(String(object))) {
         msg.lang = "th-TH";
       }
