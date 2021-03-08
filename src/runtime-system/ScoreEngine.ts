@@ -30,7 +30,7 @@ export class ScoreEngine {
       return false;
     }
 
-    window.runtimeContext = new ScoreRuntimeContext();
+    this._setupEnvironment();
     eval(
       `(async function() {try {${this.compiledCode}} catch(e) {this.handleError(e)}}).call(window.runtimeContext)`
     );
@@ -65,5 +65,14 @@ export class ScoreEngine {
     }
 
     return true;
+  }
+
+  private _setupEnvironment() {
+    window.runtimeContext = new ScoreRuntimeContext();
+
+    const runtimeOutput = document.getElementById("score_runtime_output");
+    if (runtimeOutput) {
+      runtimeOutput.innerHTML = "";
+    }
   }
 }

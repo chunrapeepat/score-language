@@ -22,6 +22,10 @@ function Editor() {
         onChange={(e) => setCode(e.target.value)}
       ></textarea>
       <button onClick={handleSubmit}>RUN</button>
+
+      <hr />
+      <h3>Output:</h3>
+      <div id="score_runtime_output" />
     </div>
   );
 }
