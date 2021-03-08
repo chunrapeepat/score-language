@@ -3,6 +3,32 @@ import { Parser } from "../Parser";
 import { Scanner } from "../Scanner";
 
 describe("translate the language to Javascript", () => {
+  it("should translate and, or operator to JS correctly", () => {
+    const input = `
+      var num = true and false or true
+    `;
+    const expectedOutput = `let _num = true && false || true;`;
+
+    const scanner = new Scanner(input);
+    const tokens = scanner.scanTokens();
+    const parser = new Parser(tokens);
+    const printer = new JSPrinter();
+    expect(printer.print(parser.parse())).toBe(expectedOutput);
+  });
+
+  it("should translate mod operator to JS correctly", () => {
+    const input = `
+      var num = 3 mod 2
+    `;
+    const expectedOutput = `let _num = 3 % 2;`;
+
+    const scanner = new Scanner(input);
+    const tokens = scanner.scanTokens();
+    const parser = new Parser(tokens);
+    const printer = new JSPrinter();
+    expect(printer.print(parser.parse())).toBe(expectedOutput);
+  });
+
   it("should translate function call to JS correctly", () => {
     const input = `
       var rand = [random 1 to 100]

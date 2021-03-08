@@ -1,4 +1,4 @@
-export interface CompilationErrorInterface {
+export interface CompilationErrorInterface extends Error {
   getLine(): number;
   getLexeme(): string;
 }

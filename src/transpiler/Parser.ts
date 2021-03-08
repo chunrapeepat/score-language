@@ -364,7 +364,31 @@ export class Parser {
   }
 
   private expression(): Expr {
-    return this.equality();
+    return this.logicOr();
+  }
+
+  private logicOr(): Expr {
+    let expr: Expr = this.logicAnd();
+
+    while (this.match(TokenType.OR)) {
+      const operator: Token = this.previous();
+      const right: Expr = this.logicAnd();
+      expr = new Binary(expr, operator, right);
+    }
+
+    return expr;
+  }
+
+  private logicAnd(): Expr {
+    let expr: Expr = this.equality();
+
+    while (this.match(TokenType.AND)) {
+      const operator: Token = this.previous();
+      const right: Expr = this.equality();
+      expr = new Binary(expr, operator, right);
+    }
+
+    return expr;
   }
 
   private equality(): Expr {
@@ -413,7 +437,7 @@ export class Parser {
   private factor(): Expr {
     let expr: Expr = this.unary();
 
-    while (this.match(TokenType.SLASH, TokenType.STAR)) {
+    while (this.match(TokenType.SLASH, TokenType.STAR, TokenType.MOD)) {
       const operator: Token = this.previous();
       const right: Expr = this.term();
       expr = new Binary(expr, operator, right);
