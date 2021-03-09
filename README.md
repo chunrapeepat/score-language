@@ -1,6 +1,33 @@
 # Score Programming Language
 
-TODO: Add about the project
+Score is a programming language designed for blind and visually impaired students as an educational tool to learn to code targeted primarily on primary and middle schools
+
+> Fun fact: Score (or an alternative term for "sheet music") is a handwritten or printed form of musical notation that uses musical symbols to indicate the pitches, rhythms, or chords of a song or instrumental musical piece
+
+### Why was "Score" developed?
+
+- Much of the CS education tools for kid relies on visual representation and are not support screen reader software such as Scratch programming language
+- Text-based programming in languages with traditional syntax (e.g. C++, Java, Javascript, or Python’s whitespace rules) are difficult to understand through audio
+- There were no educational programs for blind and visually impaired students to learn to code in Thailand
+
+### The Language Objectives
+
+- Be an educational tool for teachers to teach coding in classroom for blind and visually impaired students
+- Students can use their programming knowledges to build small game e.g. Q&A game, or play a music with musical note e.g. happy birthday song
+
+### Language Design Principle
+
+- Every instruction should be readable like an English sentence
+- No indentation and whitespace required
+
+### Future Improvement
+
+- Setting customization such as voice or musical instrument
+- Array data structure
+- Load and play custom audio file
+- Event listener
+- Function declaration
+- Global variable for multiple scripts
 
 ## Language Features
 
