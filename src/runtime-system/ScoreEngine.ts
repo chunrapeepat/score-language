@@ -19,6 +19,8 @@ export class ScoreEngine {
   constructor(code: string) {
     this.code = code;
     this.compiledCode = null;
+
+    this._clearOutput();
   }
 
   public getErrors(): Error[] {
@@ -31,6 +33,8 @@ export class ScoreEngine {
     }
 
     this._setupEnvironment();
+    this._clearOutput();
+
     eval(
       `(async function() {try {${this.compiledCode}} catch(e) {this.handleError(e)}}).call(window.runtimeContext)`
     );
@@ -69,7 +73,8 @@ export class ScoreEngine {
 
   private _setupEnvironment() {
     window.runtimeContext = new ScoreRuntimeContext();
-
+  }
+  private _clearOutput() {
     const runtimeOutput = document.getElementById("score_runtime_output");
     if (runtimeOutput) {
       runtimeOutput.innerHTML = "";

@@ -1,12 +1,21 @@
 import React from "react";
-import Editor from "./Editor";
+import TextareaEditor from "./TextareaEditor";
+import MonacoEditor from "./MonacoEditor";
 
 function App() {
-  return (
-    <div>
-      <Editor />
-    </div>
-  );
+  if (localStorage.getItem("test") === "1") {
+    return (
+      <div>
+        <TextareaEditor />
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <MonacoEditor />
+      </div>
+    );
+  }
 }
 
 export default App;
