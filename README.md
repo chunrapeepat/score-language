@@ -1,6 +1,174 @@
-# score-language
+# Score Programming Language
 
-TODO: Add description
+TODO: Add about the project
+
+## Language Features
+
+### A. Variables
+
+#### Variable declaration
+
+```
+var name = "Chun Rapeepat"
+var bool = true
+var score = 25.25
+```
+
+#### Variable reassignment
+
+```
+set score = 500;
+```
+
+### B. Operators
+
+#### Mathematical operators
+
+```
+var a = -10;
+var b = 10 + 20;
+var c = 10 - 20;
+var d = 10 * 20;
+var e = 10 / 20;
+var f = (5 mod 2) + 10;
+```
+
+#### String concatenation
+
+```
+var name = "Chun"
+var msg = "hello " + name
+```
+
+#### Logical operators
+
+```
+var a = true and false
+var b = true of false
+var c = not true
+```
+
+#### Comparison operators
+
+```
+var less = 10 < 20
+var greater = 30 > 20
+var lessThanOrEqualTo = 10 <= 10
+var greaterThanOrEqualTo = 10 >= 10
+var notEqual = 1 != 2
+```
+
+### C. Control Flow
+
+#### If statement
+
+```
+var num = 10
+if num < 100 then
+    print "num is less than 100"
+end
+```
+
+#### If-else statement
+
+```
+var num = 10
+if num < 100 then
+    print "num is less than 100"
+else
+    print "num is greater than or equal to 100"
+end
+```
+
+#### If-else else-if statement
+
+```
+var num = 10
+if num < 100 then
+    print "num is less than 100"
+else if num == 100 then
+    print "num is equal to 100"
+else
+    print "num is greater than 100"
+end
+```
+
+#### While statement
+
+```
+var a = 1
+while a <= 10 then
+    print a
+    set a = a + 1
+end
+```
+
+#### Repeat statement
+
+```
+repeat 10 times then
+    print "hi!"
+end
+```
+
+### D. Statements
+
+#### Print statement
+
+```
+var name = "Chun"
+
+# the result will print to the screen
+print "Hello my name is " + name
+```
+
+#### Say statement
+
+```
+# the result will produce via audio output
+say "hello"
+```
+
+#### Play statement
+
+```
+# play note 1 in C#major chromatic scale
+play note 1
+
+# play note 1 in C#major chromatic scale in the next octave
+play note 1 + 12
+
+# play note 1 for 3 seconds
+play note 1 for 3 secs
+```
+
+```
+var n = 1
+repeat 50 times then
+    play note n for 0.2 secs
+    set n = n + 1
+end
+```
+
+#### Wait statement
+
+```
+print "hello"
+
+wait 3 secs
+
+print "world"
+```
+
+#### Exit program statement
+
+```
+print "start program"
+
+exit program
+
+print "this line should not be executed"
+```
 
 ## Context-free Grammar
 
@@ -56,3 +224,7 @@ primary → NUMBER
 	| "(" expression ")"
 	| ID
 ```
+
+---
+
+Made with :sparkling_heart: by [Chun Rapeepat](https://thechun.dev)
