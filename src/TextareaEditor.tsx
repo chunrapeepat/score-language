@@ -15,11 +15,13 @@ const TextArea = styled.textarea`
 
 function TextareaEditor() {
   const [code, setCode] = useState<string>("");
+  const [errors, setErrors] = useState<any>([]);
 
   const handleSubmit = () => {
+    setErrors([]);
     const engine = new ScoreEngine(code);
     if (!engine.compile()) {
-      return console.error(engine.getErrors());
+      return setErrors(engine.getErrors());
     }
 
     engine.execute();
@@ -48,7 +50,19 @@ function TextareaEditor() {
             aria-atomic="true"
             aria-live="assertive"
             id="score_runtime_output"
-          />
+          >
+            {errors.length > 0 && (
+              <div>
+                {errors.map((e: any) => {
+                  return (
+                    <li style={{ color: "red" }}>
+                      {e.name} error: {e.message} at line {e.getLine()}
+                    </li>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
       </Container>
       <button style={{ fontSize: 22 }} onClick={handleSubmit}>
