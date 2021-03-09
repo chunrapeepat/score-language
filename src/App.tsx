@@ -1,10 +1,10 @@
 import React from "react";
-import Editor from "./Editor";
+import TextareaEditor from "./TextareaEditor";
 
 function App() {
   return (
     <div>
-      <Editor />
+      <TextareaEditor />
     </div>
   );
 }
