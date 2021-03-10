@@ -1,11 +1,11 @@
 import { Token } from "./Token";
 import { TokenType } from "./TokenType";
-import { UnexpectedToken, CompilationErrorInterface } from "./Error";
+import { UnexpectedToken, SyntaxError } from "./Error";
 
 export class Scanner {
   private readonly source: string;
   private readonly tokens: Token[] = [];
-  private readonly errors: CompilationErrorInterface[] = [];
+  private readonly errors: Error[] = [];
 
   private start: number = 0;
   private current: number = 0;
@@ -179,13 +179,24 @@ export class Scanner {
   }
 
   private string() {
+    let isUnterminatedString = false;
+
     while (this.peek() != '"' && !this.isAtEnd()) {
-      if (this.peek() == "\n") this.line++;
+      if (this.peek() == "\n") {
+        isUnterminatedString = true;
+        break;
+      }
       this.advance();
     }
 
     if (this.isAtEnd()) {
-      throw new Error("Unterminated string.");
+      isUnterminatedString = true;
+    }
+
+    if (isUnterminatedString) {
+      return this.errors.push(
+        new SyntaxError(this.peek(), this.line, "unterminated string")
+      );
     }
 
     // The closing ".

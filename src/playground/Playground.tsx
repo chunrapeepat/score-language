@@ -61,6 +61,7 @@ function Playground() {
     setErrors([]);
     const engine = new ScoreEngine(code);
     if (!engine.compile()) {
+      console.log(engine.getErrors());
       return setErrors(engine.getErrors());
     }
 

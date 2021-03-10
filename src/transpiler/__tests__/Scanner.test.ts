@@ -1,9 +1,18 @@
-import { UnexpectedToken } from "../Error";
+import { UnexpectedToken, SyntaxError } from "../Error";
 import { Scanner } from "../Scanner";
 import { Token } from "../Token";
 import { TokenType } from "../TokenType";
 
 describe("scanner should throw error", () => {
+  it("should throw error if string is not close with double quote", () => {
+    const input = `"hello`;
+
+    const scanner = new Scanner(input);
+    expect(() => scanner.scanTokens()).toThrow(Error);
+    expect(scanner.getErrors().length).toBe(1);
+    expect(scanner.getErrors()[0]).toBeInstanceOf(SyntaxError);
+  });
+
   it("should throw unexpected token error", () => {
     const input = `name = . ;`;
 
