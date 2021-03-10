@@ -285,14 +285,14 @@ export class Parser {
   private playStatement(): Stmt {
     this.consumeIdentifier(
       "note",
-      `expect 'note' keyword after 'play' statement.`
+      `expect 'note' keyword after 'play' statement`
     );
     const value: Expr = this.expression();
     if (this.matchIdentifier("for")) {
       const duration: Expr = this.expression();
       this.consumeIdentifier(
         "secs",
-        `expect 'secs' keyword after 'play' statement.`
+        `expect 'secs' keyword after 'play' statement`
       );
       return new PlayStatement("note", value, duration);
     }
@@ -305,7 +305,7 @@ export class Parser {
       const duration: Expr = this.expression();
       this.consumeIdentifier(
         "secs",
-        `expect 'secs' keyword after 'say' statement.`
+        `expect 'secs' keyword after 'say' statement`
       );
       return new SayStatement(value, duration);
     }
@@ -316,7 +316,7 @@ export class Parser {
     const duration: Expr = this.expression();
     this.consumeIdentifier(
       "secs",
-      `expect 'secs' keyword after 'wait' statement.`
+      `expect 'secs' keyword after 'wait' statement`
     );
     return new WaitStatement(duration);
   }
@@ -325,7 +325,7 @@ export class Parser {
     const value: Expr = this.expression();
     this.consume(
       TokenType.NEWLINE,
-      "expect 'new line' after 'print' statement."
+      "expect 'new line' after 'print' statement"
     );
     return new PrintStatement(value);
   }
@@ -340,7 +340,7 @@ export class Parser {
       "expect '=' after an identifier in 'set' statement"
     );
     const value: Expr = this.expression();
-    this.consume(TokenType.NEWLINE, "expect 'new line' after 'set' statement.");
+    this.consume(TokenType.NEWLINE, "expect 'new line' after 'set' statement");
     return new SetStatement(variableName, value);
   }
 
@@ -353,13 +353,13 @@ export class Parser {
     if (this.match(TokenType.EQUAL)) {
       initializer = this.expression();
     }
-    this.consume(TokenType.NEWLINE, "expect 'new line' after 'var' statement.");
+    this.consume(TokenType.NEWLINE, "expect 'new line' after 'var' statement");
     return new VarStatement(variableName, initializer);
   }
 
   private expressionStatement(): Stmt {
     const value: Expr = this.expression();
-    this.consume(TokenType.NEWLINE, "expect 'new line' after value.");
+    this.consume(TokenType.NEWLINE, "expect 'new line' after value");
     return new Expression(value);
   }
 

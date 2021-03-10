@@ -1,11 +1,15 @@
 import { Token } from "./Token";
 import { TokenType } from "./TokenType";
-import { UnexpectedToken, SyntaxError } from "./Error";
+import {
+  UnexpectedToken,
+  SyntaxError,
+  CompilationErrorInterface,
+} from "./Error";
 
 export class Scanner {
   private readonly source: string;
   private readonly tokens: Token[] = [];
-  private readonly errors: Error[] = [];
+  private readonly errors: CompilationErrorInterface[] = [];
 
   private start: number = 0;
   private current: number = 0;
