@@ -1,19 +1,14 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { ScoreEngine } from "./runtime-system/ScoreEngine";
+import { ScoreEngine } from "../runtime-system/ScoreEngine";
+import CodeEditor from "./CodeEditor";
 
 const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
 `;
-const TextArea = styled.textarea`
-  width: 100%;
-  outline: none;
-  font-size: 22px;
-  height: 80vh;
-`;
 
-function TextareaEditor() {
+function Playground() {
   const [code, setCode] = useState<string>("");
   const [errors, setErrors] = useState<any>([]);
 
@@ -27,20 +22,16 @@ function TextareaEditor() {
     engine.execute();
   };
 
+  const handleEditorChange = (val: string) => {
+    setCode(val);
+  };
+
   return (
     <>
       <Container>
         <div>
-          <h3>Text Editor:</h3>
-          <TextArea
-            cols={30}
-            rows={10}
-            value={code}
-            role="textbox"
-            spellCheck={false}
-            aria-multiline="true"
-            onChange={(e) => setCode(e.target.value)}
-          />
+          <h3>Text Editor: (Monaco)</h3>
+          <CodeEditor onChange={handleEditorChange} />
         </div>
         <div>
           <h3>Output:</h3>
@@ -72,4 +63,4 @@ function TextareaEditor() {
   );
 }
 
-export default TextareaEditor;
+export default Playground;
