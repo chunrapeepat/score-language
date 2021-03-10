@@ -3,6 +3,17 @@ import { Parser } from "../Parser";
 import { Scanner } from "../Scanner";
 
 describe("translate the language to Javascript", () => {
+  it("should translate multiple - and multiple + correctly", () => {
+    const input = `---1\n+++1`;
+    const expectedOutput = `-(-(-(1)));+(+(+(1)));`;
+
+    const scanner = new Scanner(input);
+    const tokens = scanner.scanTokens();
+    const parser = new Parser(tokens);
+    const printer = new JSPrinter();
+    expect(printer.print(parser.parse())).toBe(expectedOutput);
+  });
+
   it("should translate and, or operator to JS correctly", () => {
     const input = `
       var num = true and false or true
@@ -277,7 +288,7 @@ describe("translate the language to Javascript", () => {
       5 * 4 * 3
       -10
     `;
-    const expectedOutput = `(1 + 2) * 3 / 10;5 * 4 * 3;-10;`;
+    const expectedOutput = `(1 + 2) * 3 / 10;5 * 4 * 3;-(10);`;
 
     const scanner = new Scanner(input);
     const tokens = scanner.scanTokens();

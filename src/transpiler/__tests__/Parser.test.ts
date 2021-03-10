@@ -403,6 +403,28 @@ describe("parse statements", () => {
 });
 
 describe("parse expression statement", () => {
+  test("multiple unary + and -", () => {
+    const input = `++1\n--1`;
+    const expectedOutput = [
+      new Expression(
+        new Unary(
+          new Token(TokenType.PLUS, "+", null, 1),
+          new Unary(new Token(TokenType.PLUS, "+", null, 1), new Literal(1))
+        )
+      ),
+      new Expression(
+        new Unary(
+          new Token(TokenType.MINUS, "-", null, 2),
+          new Unary(new Token(TokenType.MINUS, "-", null, 2), new Literal(1))
+        )
+      ),
+    ];
+
+    const scanner = new Scanner(input);
+    const parser = new Parser(scanner.scanTokens());
+    expect(parser.parse()).toEqual(expectedOutput);
+  });
+
   test("and, or operators", () => {
     const input = `true and false or true`;
     const expectedOutput = [
