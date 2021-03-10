@@ -5,8 +5,13 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: #ddd;
 }
 
 * {
   box-sizing: border-box;
+}
+
+.react-monaco-editor-container {
+  height: calc(100% - 42px) !important;
 }

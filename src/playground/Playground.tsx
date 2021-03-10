@@ -3,12 +3,32 @@ import styled from "styled-components";
 import { ScoreEngine } from "../runtime-system/ScoreEngine";
 import CodeEditor from "./CodeEditor";
 
+const Navbar = styled.div`
+  height: 55px;
+  background: #3a3f43;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+const Logo = styled.div`
+  background: #f65b02;
+  height: 55px;
+  display: flex;
+  align-items: center;
+  padding: 0 15px;
+
+  & h1 {
+    margin: 0;
+    color: white;
+    font-size: 1.4rem;
+  }
+`;
 const Container = styled.div`
   display: grid;
   grid-template-columns: 70vw 30vw;
-  height: 100vh;
+  height: calc(100vh - 42px - 55px);
 `;
-const ResultHeader = styled.h3`
+const Header = styled.h3`
   margin: 0;
   color: white;
   background: #272b2f;
@@ -18,17 +38,26 @@ const Output = styled.div`
   font-size: 1.2rem;
   padding: 10px 15px;
   overflow-y: auto;
-  height: calc(100vh - 42px);
+  height: calc(100vh - 42px - 55px);
+`;
+const RunButton = styled.button`
+  color: white;
+  border: 0;
+  background: #1e1e1e;
+  font-size: 1.2rem;
+  margin-right: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 7px 15px;
+  border-radius: 5rem;
+  outline: none;
 `;
 
 function Playground() {
   const [code, setCode] = useState<string>("");
   const [errors, setErrors] = useState<any>([]);
 
-  const handleRun = () => {
-    _handleRun(code);
-  };
-  const _handleRun = (code: string) => {
+  const handleRun = (code: string) => {
     setErrors([]);
     const engine = new ScoreEngine(code);
     if (!engine.compile()) {
@@ -44,12 +73,22 @@ function Playground() {
 
   return (
     <>
+      <Navbar>
+        <Logo>
+          <h1>The Score Programming Language</h1>
+        </Logo>
+        <div>
+          <RunButton onClick={() => handleRun(code)}>RUN CODE</RunButton>
+        </div>
+      </Navbar>
       <Container>
         <div>
-          <CodeEditor onRun={_handleRun} onChange={handleEditorChange} />
+          <Header>Code Editor</Header>
+
+          <CodeEditor onRun={handleRun} onChange={handleEditorChange} />
         </div>
         <div>
-          <ResultHeader>Result</ResultHeader>
+          <Header>Result</Header>
 
           <Output
             role="region"
