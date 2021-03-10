@@ -5,7 +5,20 @@ import CodeEditor from "./CodeEditor";
 
 const Container = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 70vw 30vw;
+  height: 100vh;
+`;
+const ResultHeader = styled.h3`
+  margin: 0;
+  color: white;
+  background: #272b2f;
+  padding: 10px 15px;
+`;
+const Output = styled.div`
+  font-size: 1.2rem;
+  padding: 10px 15px;
+  overflow-y: auto;
+  height: calc(100vh - 42px);
 `;
 
 function Playground() {
@@ -33,12 +46,12 @@ function Playground() {
     <>
       <Container>
         <div>
-          <h3>Text Editor: (Monaco)</h3>
           <CodeEditor onRun={_handleRun} onChange={handleEditorChange} />
         </div>
         <div>
-          <h3>Output:</h3>
-          <div
+          <ResultHeader>Result</ResultHeader>
+
+          <Output
             role="region"
             aria-label="output of Development Environment"
             aria-atomic="true"
@@ -56,12 +69,9 @@ function Playground() {
                 })}
               </div>
             )}
-          </div>
+          </Output>
         </div>
       </Container>
-      <button style={{ fontSize: 22 }} onClick={handleRun}>
-        RUN
-      </button>
     </>
   );
 }

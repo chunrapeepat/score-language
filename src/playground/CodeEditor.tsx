@@ -12,6 +12,7 @@ function CodeEditor({ onChange, onRun }: CodeEditorProps) {
     monaco: typeof monacoEditor
   ) => {
     editor.focus();
+    editor.updateOptions({ fontSize: 22 });
     editor.addAction({
       id: "run",
       label: "run the code",
