@@ -4,12 +4,21 @@ import * as monacoEditor from "monaco-editor/esm/vs/editor/editor.api";
 
 interface CodeEditorProps {
   onChange: (val: string) => void;
+  onRun: (code: string) => void;
 }
-function CodeEditor({ onChange }: CodeEditorProps) {
+function CodeEditor({ onChange, onRun }: CodeEditorProps) {
   const editorDidMount = (
-    editor: monacoEditor.editor.IStandaloneCodeEditor
+    editor: monacoEditor.editor.IStandaloneCodeEditor,
+    monaco: typeof monacoEditor
   ) => {
     editor.focus();
+    editor.addAction({
+      id: "run",
+      label: "run the code",
+      keybindings: [monaco.KeyMod.Shift | monaco.KeyCode.Enter],
+      run: (ed) => onRun(ed.getValue()),
+    });
+
     onChange(localStorage.getItem("current_code_value") || "");
   };
 

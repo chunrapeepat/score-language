@@ -12,7 +12,10 @@ function Playground() {
   const [code, setCode] = useState<string>("");
   const [errors, setErrors] = useState<any>([]);
 
-  const handleSubmit = () => {
+  const handleRun = () => {
+    _handleRun(code);
+  };
+  const _handleRun = (code: string) => {
     setErrors([]);
     const engine = new ScoreEngine(code);
     if (!engine.compile()) {
@@ -31,7 +34,7 @@ function Playground() {
       <Container>
         <div>
           <h3>Text Editor: (Monaco)</h3>
-          <CodeEditor onChange={handleEditorChange} />
+          <CodeEditor onRun={_handleRun} onChange={handleEditorChange} />
         </div>
         <div>
           <h3>Output:</h3>
@@ -56,7 +59,7 @@ function Playground() {
           </div>
         </div>
       </Container>
-      <button style={{ fontSize: 22 }} onClick={handleSubmit}>
+      <button style={{ fontSize: 22 }} onClick={handleRun}>
         RUN
       </button>
     </>
