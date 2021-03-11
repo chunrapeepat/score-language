@@ -226,6 +226,13 @@ var age = [ask "what is your age?" as number]
 print age + 1
 ```
 
+#### Application with `play note` statement
+```
+repeat 10 times
+    play note [random from 1 to 14] for 0.2s
+end
+```
+
 ## Future Improvement
 
 - Setting customization such as voice or musical instrument
