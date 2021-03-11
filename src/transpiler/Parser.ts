@@ -128,10 +128,9 @@ export class Parser {
       "times",
       `expect 'times' keyword in 'while' statement.`
     );
-    this.consume(TokenType.THEN, `expect 'then' after 'while' statement`);
     this.consume(
       TokenType.NEWLINE,
-      `expect 'new line' after 'then' keyword in 'while' statement`
+      `expect 'new line' after an expression in 'while' statement`
     );
 
     this.allowBreakOrContinueStmt = true;
@@ -162,10 +161,9 @@ export class Parser {
 
   private whileStatement(): Stmt {
     const test: Expr = this.expression();
-    this.consume(TokenType.THEN, `expect 'then' after 'while' statement`);
     this.consume(
       TokenType.NEWLINE,
-      `expect 'new line' after 'then' keyword in 'while' statement`
+      `expect 'new line' after an expression in 'while' statement`
     );
 
     this.allowBreakOrContinueStmt = true;
@@ -212,10 +210,9 @@ export class Parser {
 
   private ifStatement(): Stmt {
     const test: Expr = this.expression();
-    this.consume(TokenType.THEN, `expect 'then' after 'if' statement`);
     this.consume(
       TokenType.NEWLINE,
-      `expect 'new line' after 'then' keyword in 'if' statement`
+      `expect 'new line' after an expression in 'if' statement`
     );
 
     const consequent: Stmt[] = [];
@@ -275,25 +272,23 @@ export class Parser {
   }
 
   private exitStatement(): Stmt {
-    this.consumeIdentifier(
-      "program",
-      `expect 'program' keyword after 'exit' statement.`
-    );
     return new ExitStatement();
   }
 
   private playStatement(): Stmt {
     this.consumeIdentifier(
       "note",
-      `expect 'note' keyword after 'play' statement.`
+      `expect 'note' keyword after 'play' statement`
     );
     const value: Expr = this.expression();
     if (this.matchIdentifier("for")) {
       const duration: Expr = this.expression();
-      this.consumeIdentifier(
-        "secs",
-        `expect 'secs' keyword after 'play' statement.`
-      );
+      if (!this.matchIdentifier("secs", "s")) {
+        throw this.error(
+          this.peek(),
+          `expect 'secs' or 's' keyword after 'for' in 'play' statement`
+        );
+      }
       return new PlayStatement("note", value, duration);
     }
     return new PlayStatement("note", value);
@@ -303,10 +298,12 @@ export class Parser {
     const value: Expr = this.expression();
     if (this.matchIdentifier("for")) {
       const duration: Expr = this.expression();
-      this.consumeIdentifier(
-        "secs",
-        `expect 'secs' keyword after 'say' statement.`
-      );
+      if (!this.matchIdentifier("secs", "s")) {
+        throw this.error(
+          this.peek(),
+          `expect 'secs' or 's' keyword after 'for' in 'say' statement`
+        );
+      }
       return new SayStatement(value, duration);
     }
     return new SayStatement(value);
@@ -314,10 +311,12 @@ export class Parser {
 
   private waitStatement(): Stmt {
     const duration: Expr = this.expression();
-    this.consumeIdentifier(
-      "secs",
-      `expect 'secs' keyword after 'wait' statement.`
-    );
+    if (!this.matchIdentifier("secs", "s")) {
+      throw this.error(
+        this.peek(),
+        `expect 'secs' or 's' keyword after 'wait' statement`
+      );
+    }
     return new WaitStatement(duration);
   }
 
@@ -325,7 +324,7 @@ export class Parser {
     const value: Expr = this.expression();
     this.consume(
       TokenType.NEWLINE,
-      "expect 'new line' after 'print' statement."
+      "expect 'new line' after 'print' statement"
     );
     return new PrintStatement(value);
   }
@@ -340,26 +339,36 @@ export class Parser {
       "expect '=' after an identifier in 'set' statement"
     );
     const value: Expr = this.expression();
-    this.consume(TokenType.NEWLINE, "expect 'new line' after 'set' statement.");
+    this.consume(TokenType.NEWLINE, "expect 'new line' after 'set' statement");
     return new SetStatement(variableName, value);
   }
 
   private varStatement(): Stmt {
-    const variableName: Token = this.consume(
-      TokenType.IDENTIFIER,
-      "expect an identifier after 'var' keyword"
-    );
+    let variableName: Token;
+    if (this.peek().lexeme.trim() == "") {
+      variableName = this.consume(
+        TokenType.IDENTIFIER,
+        `expect a variable name after 'var' keyword`
+      );
+    } else {
+      variableName = this.consume(
+        TokenType.IDENTIFIER,
+        `can not use '${
+          this.peek().lexeme
+        }' as a variable name in 'var' statement`
+      );
+    }
     let initializer: Expr = new Literal(null);
     if (this.match(TokenType.EQUAL)) {
       initializer = this.expression();
     }
-    this.consume(TokenType.NEWLINE, "expect 'new line' after 'var' statement.");
+    this.consume(TokenType.NEWLINE, "expect 'new line' after 'var' statement");
     return new VarStatement(variableName, initializer);
   }
 
   private expressionStatement(): Stmt {
     const value: Expr = this.expression();
-    this.consume(TokenType.NEWLINE, "expect 'new line' after value.");
+    this.consume(TokenType.NEWLINE, "expect 'new line' after value");
     return new Expression(value);
   }
 

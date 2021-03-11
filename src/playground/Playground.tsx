@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { ScoreEngine } from "../runtime-system/ScoreEngine";
+import { playErrorSound } from "../utils/tone";
 import CodeEditor from "./CodeEditor";
 
 const Navbar = styled.div`
@@ -57,11 +58,13 @@ function Playground() {
   const [code, setCode] = useState<string>("");
   const [errors, setErrors] = useState<any>([]);
 
-  const handleRun = (code: string) => {
+  const handleRun = async (code: string) => {
     setErrors([]);
     const engine = new ScoreEngine(code);
     if (!engine.compile()) {
-      return setErrors(engine.getErrors());
+      setErrors(engine.getErrors());
+      await playErrorSound();
+      return;
     }
 
     engine.execute();

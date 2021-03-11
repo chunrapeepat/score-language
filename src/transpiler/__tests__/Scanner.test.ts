@@ -1,9 +1,18 @@
-import { UnexpectedToken } from "../Error";
+import { UnexpectedToken, SyntaxError } from "../Error";
 import { Scanner } from "../Scanner";
 import { Token } from "../Token";
 import { TokenType } from "../TokenType";
 
 describe("scanner should throw error", () => {
+  it("should throw error if string is not close with double quote", () => {
+    const input = `"hello`;
+
+    const scanner = new Scanner(input);
+    expect(() => scanner.scanTokens()).toThrow(Error);
+    expect(scanner.getErrors().length).toBe(1);
+    expect(scanner.getErrors()[0]).toBeInstanceOf(SyntaxError);
+  });
+
   it("should throw unexpected token error", () => {
     const input = `name = . ;`;
 
@@ -54,10 +63,9 @@ describe("scanner should return a list of token correctly with EOF at the end", 
   });
 
   test("exit statement", () => {
-    const input = `exit program`;
+    const input = `exit`;
     const expectedOutput = [
       new Token(TokenType.EXIT, "exit", null, 1),
-      new Token(TokenType.IDENTIFIER, "program", null, 1),
 
       new Token(TokenType.NEWLINE, "\n", null, 1),
       new Token(TokenType.EOF, "", null, 2),
@@ -68,12 +76,11 @@ describe("scanner should return a list of token correctly with EOF at the end", 
   });
 
   test("repeat statement", () => {
-    const input = `repeat 10 times then end`;
+    const input = `repeat 10 times end`;
     const expectedOutput = [
       new Token(TokenType.REPEAT, "repeat", null, 1),
       new Token(TokenType.NUMBER, "10", 10, 1),
       new Token(TokenType.IDENTIFIER, "times", null, 1),
-      new Token(TokenType.THEN, "then", null, 1),
       new Token(TokenType.END, "end", null, 1),
 
       new Token(TokenType.NEWLINE, "\n", null, 1),
@@ -85,11 +92,10 @@ describe("scanner should return a list of token correctly with EOF at the end", 
   });
 
   test("while statement", () => {
-    const input = `while true then end`;
+    const input = `while true end`;
     const expectedOutput = [
       new Token(TokenType.WHILE, "while", null, 1),
       new Token(TokenType.TRUE, "true", null, 1),
-      new Token(TokenType.THEN, "then", null, 1),
       new Token(TokenType.END, "end", null, 1),
 
       new Token(TokenType.NEWLINE, "\n", null, 1),
@@ -101,10 +107,9 @@ describe("scanner should return a list of token correctly with EOF at the end", 
   });
 
   test("if statement", () => {
-    const input = `if then else end`;
+    const input = `if else end`;
     const expectedOutput = [
       new Token(TokenType.IF, "if", null, 1),
-      new Token(TokenType.THEN, "then", null, 1),
       new Token(TokenType.ELSE, "else", null, 1),
       new Token(TokenType.END, "end", null, 1),
 

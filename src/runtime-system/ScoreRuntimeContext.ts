@@ -1,4 +1,5 @@
 import * as Tone from "tone";
+import { playErrorSound } from "../utils/tone";
 import { TypeError, InvalidArgumentError } from "./Error";
 import * as nativeFunctions from "./native-functions";
 
@@ -49,6 +50,8 @@ export class ScoreRuntimeContext {
     } else {
       this._print(`${e.name}: ${e.message}`, PrintType.ERROR);
     }
+
+    playErrorSound();
   };
 
   // statements
@@ -56,19 +59,24 @@ export class ScoreRuntimeContext {
     if (typeof note !== "number" || typeof duration !== "number") {
       throw new TypeError("play note statement arguments must be number");
     }
-    if (note < 0) {
+    if (note < 0 || note % 1 !== 0) {
       throw new InvalidArgumentError(
-        "note in play statement must be positive number"
+        "note value in play statement must be positive integer"
+      );
+    }
+    if (note > 100) {
+      throw new InvalidArgumentError(
+        "maxium of note value in play statement must not exceed 100"
       );
     }
 
-    const notes = ["C#", "D", "D#", "E", "F", "G", "G#", "A", "A#", "B", "C"];
+    const notes = ["C", "D", "E", "F", "G", "A", "B"];
     const synth = new Tone.Synth().toDestination();
     const delay = 150;
     return new Promise((resolve, _) => {
       synth.triggerAttackRelease(
         `${notes[(note - 1) % notes.length]}${
-          4 + Math.floor(note / notes.length)
+          4 + Math.floor(note / (notes.length + 1))
         }`,
         duration
       );

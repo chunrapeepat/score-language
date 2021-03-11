@@ -168,10 +168,15 @@ export class JSPrinter implements StmtVisitor<string>, ExprVisitor<string> {
     return expr.value.toString();
   }
   visitUnaryExpr(expr: Unary): string {
-    let operator = expr.operator.lexeme;
     if (expr.operator.type === TokenType.NOT) {
-      operator = "!";
+      return `!${expr.right.accept(this)}`;
     }
-    return `${operator}${expr.right.accept(this)}`;
+    if (expr.operator.type === TokenType.MINUS) {
+      return `-(${expr.right.accept(this)})`;
+    }
+    if (expr.operator.type === TokenType.PLUS) {
+      return `+(${expr.right.accept(this)})`;
+    }
+    return "";
   }
 }

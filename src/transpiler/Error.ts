@@ -29,7 +29,7 @@ export class UnexpectedToken
   private readonly lineNumber: number;
 
   constructor(lexeme: string, lineNumber: number) {
-    super(`unexpected character '${lexeme}' at line ${lineNumber}`);
+    super(`unexpected character '${lexeme}'`);
     this.name = "UnexpectedToken";
     this.lexeme = lexeme;
     this.lineNumber = lineNumber;

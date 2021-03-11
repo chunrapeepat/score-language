@@ -31,7 +31,7 @@ describe("parse error", () => {
   it("should parse error when use continue or break statement outside while and repeat", () => {
     const input = `
       break
-      repeat 10 times then
+      repeat 10 times 
         continue
       end
     `;
@@ -76,12 +76,12 @@ describe("parse error", () => {
 describe("parse statements", () => {
   it("should parse break and continue statements in repeat and while correctly", () => {
     const input = `
-      repeat 10 times then
+      repeat 10 times 
         continue
       end
 
-      while true then
-        if true then
+      while true 
+        if true 
           break
         end
       end
@@ -100,9 +100,7 @@ describe("parse statements", () => {
   });
 
   it("should parse exit statement correctly", () => {
-    const input = `
-      exit program
-    `;
+    const input = `exit`;
 
     const expectedOutput = [new ExitStatement()];
 
@@ -113,7 +111,7 @@ describe("parse statements", () => {
 
   it("should parse repeat statement correctly", () => {
     const input = `
-      repeat 10 times then
+      repeat 10 times 
         print "hello"
       end
     `;
@@ -131,7 +129,7 @@ describe("parse statements", () => {
 
   it("should parse while statement correctly", () => {
     const input = `
-      while true then
+      while true 
         print "infinite loop" 
       end
     `;
@@ -149,8 +147,8 @@ describe("parse statements", () => {
 
   it("should parse nested if-else statement correctly", () => {
     const input = `
-      if a <= 3 then
-        if a == 2 then
+      if a <= 3 
+        if a == 2 
           print "a is 2"
         end
       else
@@ -185,9 +183,9 @@ describe("parse statements", () => {
 
   it("should parse if-else with else-if statement correctly", () => {
     const input = `
-      if a <= 3 then
+      if a <= 3 
         print "a is less than or equal to 3"
-      else if a >= 0 then
+      else if a >= 0 
         print "a is greater than 0"
       else
         print "a is less than 0 or greater than 3"
@@ -224,7 +222,7 @@ describe("parse statements", () => {
 
   it("should parse if-else statement correctly", () => {
     const input = `
-      if a <= 3 then
+      if a <= 3 
         print "a is less than or equal to 3"
       else
         print "a is greater than 3"
@@ -249,7 +247,7 @@ describe("parse statements", () => {
 
   it("should parse if statement correctly", () => {
     const input = `
-      if a <= 3 then
+      if a <= 3 
         print "a is less than or equal to 3"
         set a = a + 1
       end
@@ -284,12 +282,18 @@ describe("parse statements", () => {
     const input = `
       play note 3
       play note n for 2 secs
+      play note n for 2s
     `;
     const expectedOutput = [
       new PlayStatement("note", new Literal(3)),
       new PlayStatement(
         "note",
         new Variable(new Token(TokenType.IDENTIFIER, "n", null, 3)),
+        new Literal(2)
+      ),
+      new PlayStatement(
+        "note",
+        new Variable(new Token(TokenType.IDENTIFIER, "n", null, 4)),
         new Literal(2)
       ),
     ];
@@ -403,6 +407,28 @@ describe("parse statements", () => {
 });
 
 describe("parse expression statement", () => {
+  test("multiple unary + and -", () => {
+    const input = `++1\n--1`;
+    const expectedOutput = [
+      new Expression(
+        new Unary(
+          new Token(TokenType.PLUS, "+", null, 1),
+          new Unary(new Token(TokenType.PLUS, "+", null, 1), new Literal(1))
+        )
+      ),
+      new Expression(
+        new Unary(
+          new Token(TokenType.MINUS, "-", null, 2),
+          new Unary(new Token(TokenType.MINUS, "-", null, 2), new Literal(1))
+        )
+      ),
+    ];
+
+    const scanner = new Scanner(input);
+    const parser = new Parser(scanner.scanTokens());
+    expect(parser.parse()).toEqual(expectedOutput);
+  });
+
   test("and, or operators", () => {
     const input = `true and false or true`;
     const expectedOutput = [

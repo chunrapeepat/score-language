@@ -1,6 +1,10 @@
 import { Token } from "./Token";
 import { TokenType } from "./TokenType";
-import { UnexpectedToken, CompilationErrorInterface } from "./Error";
+import {
+  UnexpectedToken,
+  SyntaxError,
+  CompilationErrorInterface,
+} from "./Error";
 
 export class Scanner {
   private readonly source: string;
@@ -130,7 +134,6 @@ export class Scanner {
     keywords["say"] = TokenType.SAY;
     keywords["print"] = TokenType.PRINT;
     keywords["if"] = TokenType.IF;
-    keywords["then"] = TokenType.THEN;
     keywords["else"] = TokenType.ELSE;
     keywords["end"] = TokenType.END;
     keywords["while"] = TokenType.WHILE;
@@ -179,13 +182,24 @@ export class Scanner {
   }
 
   private string() {
+    let isUnterminatedString = false;
+
     while (this.peek() != '"' && !this.isAtEnd()) {
-      if (this.peek() == "\n") this.line++;
+      if (this.peek() == "\n") {
+        isUnterminatedString = true;
+        break;
+      }
       this.advance();
     }
 
     if (this.isAtEnd()) {
-      throw new Error("Unterminated string.");
+      isUnterminatedString = true;
+    }
+
+    if (isUnterminatedString) {
+      return this.errors.push(
+        new SyntaxError(this.peek(), this.line, "unterminated string")
+      );
     }
 
     // The closing ".

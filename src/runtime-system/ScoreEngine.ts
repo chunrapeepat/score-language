@@ -64,7 +64,6 @@ export class ScoreEngine {
       const printer = new JSPrinter();
       this.compiledCode = printer.print(syntaxTree);
     } catch (e) {
-      this.errors = [...this.errors, ...parser.getErrors()];
       return false;
     }
 
