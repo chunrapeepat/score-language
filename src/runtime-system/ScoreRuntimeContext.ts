@@ -1,4 +1,5 @@
 import * as Tone from "tone";
+import { playErrorSound } from "../utils/tone";
 import { TypeError, InvalidArgumentError } from "./Error";
 import * as nativeFunctions from "./native-functions";
 
@@ -49,6 +50,8 @@ export class ScoreRuntimeContext {
     } else {
       this._print(`${e.name}: ${e.message}`, PrintType.ERROR);
     }
+
+    playErrorSound();
   };
 
   // statements
