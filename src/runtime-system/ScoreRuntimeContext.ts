@@ -56,9 +56,14 @@ export class ScoreRuntimeContext {
     if (typeof note !== "number" || typeof duration !== "number") {
       throw new TypeError("play note statement arguments must be number");
     }
-    if (note < 0) {
+    if (note < 0 || note % 1 !== 0) {
       throw new InvalidArgumentError(
-        "note in play statement must be positive number"
+        "note value in play statement must be positive integer"
+      );
+    }
+    if (note > 100) {
+      throw new InvalidArgumentError(
+        "maxium of note value in play statement must not exceed 100"
       );
     }
 
