@@ -347,10 +347,20 @@ export class Parser {
   }
 
   private varStatement(): Stmt {
-    const variableName: Token = this.consume(
-      TokenType.IDENTIFIER,
-      "expect an identifier after 'var' keyword"
-    );
+    let variableName: Token;
+    if (this.peek().lexeme.trim() == "") {
+      variableName = this.consume(
+        TokenType.IDENTIFIER,
+        `expect a variable name after 'var' keyword`
+      );
+    } else {
+      variableName = this.consume(
+        TokenType.IDENTIFIER,
+        `can not use '${
+          this.peek().lexeme
+        }' as a variable name in 'var' statement`
+      );
+    }
     let initializer: Expr = new Literal(null);
     if (this.match(TokenType.EQUAL)) {
       initializer = this.expression();
