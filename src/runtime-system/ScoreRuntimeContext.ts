@@ -62,13 +62,13 @@ export class ScoreRuntimeContext {
       );
     }
 
-    const notes = ["C#", "D", "D#", "E", "F", "G", "G#", "A", "A#", "B", "C"];
+    const notes = ["C", "D", "E", "F", "G", "A", "B"];
     const synth = new Tone.Synth().toDestination();
     const delay = 150;
     return new Promise((resolve, _) => {
       synth.triggerAttackRelease(
         `${notes[(note - 1) % notes.length]}${
-          4 + Math.floor(note / notes.length)
+          4 + Math.floor(note / (notes.length + 1))
         }`,
         duration
       );
