@@ -159,11 +159,11 @@ say "hello"
 #### Play statement
 
 ```
-# play note 1 in C#major chromatic scale
+# play note 1 in C major scale
 play note 1
 
-# play note 1 in C#major chromatic scale in the next octave
-play note 1 + 12
+# play note 1 in C major scale in the next octave
+play note 1 + 7
 
 # play note 1 for 3 seconds
 play note 1 for 3 secs
@@ -198,6 +198,27 @@ print "start program"
 exit
 
 print "this line should not be executed"
+```
+
+### E. Native Functions
+
+#### Random function
+
+```
+var num = [random from 1 to 10]
+print num
+```
+
+#### Ask function
+
+```
+var name = [ask "what is your name?"]
+print "My name is " + name
+```
+
+```
+var age = [ask "what is your age?" as number]
+print age + 1
 ```
 
 ## Context-free Grammar
