@@ -91,7 +91,7 @@ var notEqual = 1 != 2
 
 ```
 var num = 10
-if num < 100 then
+if num < 100
     print "num is less than 100"
 end
 ```
@@ -100,7 +100,7 @@ end
 
 ```
 var num = 10
-if num < 100 then
+if num < 100
     print "num is less than 100"
 else
     print "num is greater than or equal to 100"
@@ -111,9 +111,9 @@ end
 
 ```
 var num = 10
-if num < 100 then
+if num < 100
     print "num is less than 100"
-else if num == 100 then
+else if num == 100
     print "num is equal to 100"
 else
     print "num is greater than 100"
@@ -124,7 +124,7 @@ end
 
 ```
 var a = 1
-while a <= 10 then
+while a <= 10
     print a
     set a = a + 1
 end
@@ -133,7 +133,7 @@ end
 #### Repeat statement
 
 ```
-repeat 10 times then
+repeat 10 times
     print "hi!"
 end
 ```
@@ -167,12 +167,15 @@ play note 1 + 12
 
 # play note 1 for 3 seconds
 play note 1 for 3 secs
+
+# or
+play note 1 for 3s
 ```
 
 ```
 var n = 1
-repeat 50 times then
-    play note n for 0.2 secs
+repeat 50 times
+    play note n for 0.2s
     set n = n + 1
 end
 ```
@@ -182,7 +185,7 @@ end
 ```
 print "hello"
 
-wait 3 secs
+wait 3s
 
 print "world"
 ```
@@ -192,7 +195,7 @@ print "world"
 ```
 print "start program"
 
-exit program
+exit
 
 print "this line should not be executed"
 ```
