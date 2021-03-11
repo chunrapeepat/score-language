@@ -1,6 +1,6 @@
 # Score Programming Language
 
-Score is a programming language designed for blind and visually impaired students as an educational tool to learn to code targeted primarily on primary and middle schools
+Score is a text-based programming language designed for blind and visually impaired students as an educational tool to learn to code by building a game and music which targeted primarily on children at the age of 12 - 16 years old
 
 > Fun fact: Score (or an alternative term for "sheet music") is a handwritten or printed form of musical notation that uses musical symbols to indicate the pitches, rhythms, or chords of a song or instrumental musical piece
 
@@ -9,25 +9,28 @@ Score is a programming language designed for blind and visually impaired student
 - Much of the CS education tools for kid relies on visual representation and are not support screen reader software such as Scratch programming language
 - Text-based programming in languages with traditional syntax (e.g. C++, Java, Javascript, or Python’s whitespace rules) are difficult to understand through audio
 - There were no educational programs for blind and visually impaired students to learn to code in Thailand
-
-### The Language Objectives
-
-- Be an educational tool for teachers to teach coding in classroom for blind and visually impaired students
-- Students can use their programming knowledges to build small game e.g. Q&A game, or play a music with musical note e.g. happy birthday song
+- Build an educational tool for teachers to teach coding based on the national computer science curriculum
 
 ### Language Design Principle
 
 - Every instruction should be readable like an English sentence
 - No indentation and whitespace required
 
-### Future Improvement
+## Try it yourself!!
 
-- Setting customization such as voice or musical instrument
-- Array data structure
-- Load and play custom audio file
-- Event listener
-- Function declaration
-- Global variable for multiple scripts
+1. Go to [The Score Programming Language Playground](https://score.thechun.dev)
+2. Let's start with this code and feel free to edit by yourself (and don't forget to turn audio on)
+
+```
+var n = 1
+while n <= 14
+    play note n for 0.2s
+    set n = n + 1
+end
+```
+
+3. Press `shift + enter` to run the code, or you can also hit the "RUN CODE" button on the top-right of the screen
+4. See the result :)
 
 ## Language Features
 
@@ -220,6 +223,15 @@ print "My name is " + name
 var age = [ask "what is your age?" as number]
 print age + 1
 ```
+
+## Future Improvement
+
+- Setting customization such as voice or musical instrument
+- Array data structure
+- Load and play custom audio file
+- Event listener
+- Function declaration
+- Global variable for multiple scripts
 
 ## Context-free Grammar
 
