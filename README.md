@@ -1,6 +1,6 @@
 # Score Programming Language
 
-Score is a programming language designed for blind and visually impaired students as an educational tool to learn to code targeted primarily on primary and middle schools
+Score is a text-based programming language designed for blind and visually impaired students as an educational tool to learn to code by building a game and music which targeted primarily on children at the age of 12 - 16 years old
 
 > Fun fact: Score (or an alternative term for "sheet music") is a handwritten or printed form of musical notation that uses musical symbols to indicate the pitches, rhythms, or chords of a song or instrumental musical piece
 
@@ -9,25 +9,28 @@ Score is a programming language designed for blind and visually impaired student
 - Much of the CS education tools for kid relies on visual representation and are not support screen reader software such as Scratch programming language
 - Text-based programming in languages with traditional syntax (e.g. C++, Java, Javascript, or Python’s whitespace rules) are difficult to understand through audio
 - There were no educational programs for blind and visually impaired students to learn to code in Thailand
-
-### The Language Objectives
-
-- Be an educational tool for teachers to teach coding in classroom for blind and visually impaired students
-- Students can use their programming knowledges to build small game e.g. Q&A game, or play a music with musical note e.g. happy birthday song
+- Build an educational tool for teachers to teach coding based on the national computer science curriculum
 
 ### Language Design Principle
 
 - Every instruction should be readable like an English sentence
 - No indentation and whitespace required
 
-### Future Improvement
+## Try it yourself!!
 
-- Setting customization such as voice or musical instrument
-- Array data structure
-- Load and play custom audio file
-- Event listener
-- Function declaration
-- Global variable for multiple scripts
+1. Go to [The Score Programming Language Playground](https://score.thechun.dev)
+2. Let's start with this code and feel free to edit by yourself (and don't forget to turn audio on)
+
+```
+var n = 1
+while n <= 14
+    play note n for 0.2s
+    set n = n + 1
+end
+```
+
+3. Press `shift + enter` to run the code, or you can also hit the "RUN CODE" button on the top-right of the screen
+4. See the result :)
 
 ## Language Features
 
@@ -91,7 +94,7 @@ var notEqual = 1 != 2
 
 ```
 var num = 10
-if num < 100 then
+if num < 100
     print "num is less than 100"
 end
 ```
@@ -100,7 +103,7 @@ end
 
 ```
 var num = 10
-if num < 100 then
+if num < 100
     print "num is less than 100"
 else
     print "num is greater than or equal to 100"
@@ -111,9 +114,9 @@ end
 
 ```
 var num = 10
-if num < 100 then
+if num < 100
     print "num is less than 100"
-else if num == 100 then
+else if num == 100
     print "num is equal to 100"
 else
     print "num is greater than 100"
@@ -124,7 +127,7 @@ end
 
 ```
 var a = 1
-while a <= 10 then
+while a <= 10
     print a
     set a = a + 1
 end
@@ -133,7 +136,7 @@ end
 #### Repeat statement
 
 ```
-repeat 10 times then
+repeat 10 times
     print "hi!"
 end
 ```
@@ -159,20 +162,23 @@ say "hello"
 #### Play statement
 
 ```
-# play note 1 in C#major chromatic scale
+# play note 1 in C major scale
 play note 1
 
-# play note 1 in C#major chromatic scale in the next octave
-play note 1 + 12
+# play note 1 in C major scale in the next octave
+play note 1 + 7
 
 # play note 1 for 3 seconds
 play note 1 for 3 secs
+
+# or
+play note 1 for 3s
 ```
 
 ```
 var n = 1
-repeat 50 times then
-    play note n for 0.2 secs
+repeat 50 times
+    play note n for 0.2s
     set n = n + 1
 end
 ```
@@ -182,7 +188,7 @@ end
 ```
 print "hello"
 
-wait 3 secs
+wait 3s
 
 print "world"
 ```
@@ -192,10 +198,40 @@ print "world"
 ```
 print "start program"
 
-exit program
+exit
 
 print "this line should not be executed"
 ```
+
+### E. Native Functions
+
+#### Random function
+
+```
+var num = [random from 1 to 10]
+print num
+```
+
+#### Ask function
+
+```
+var name = [ask "what is your name?"]
+print "My name is " + name
+```
+
+```
+var age = [ask "what is your age?" as number]
+print age + 1
+```
+
+## Future Improvement
+
+- Setting customization such as voice or musical instrument
+- Array data structure
+- Load and play custom audio file
+- Event listener
+- Function declaration
+- Global variable for multiple scripts
 
 ## Context-free Grammar
 
