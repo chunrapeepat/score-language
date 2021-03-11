@@ -275,10 +275,6 @@ export class Parser {
   }
 
   private exitStatement(): Stmt {
-    this.consumeIdentifier(
-      "program",
-      `expect 'program' keyword after 'exit' statement.`
-    );
     return new ExitStatement();
   }
 

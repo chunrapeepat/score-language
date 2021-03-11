@@ -232,7 +232,7 @@ setStmt → "set" ID "=" expression "\n"
 sayStmt → "say" expression (ID["for"] expression ID["secs"])? "\n"
 waitStmt → "wait" expression ID["secs"] "\n"
 playStmt → "play" ID["note"] expression (ID["for"] expression ID["secs"])? "\n"
-exitStmt → "exit" ID["program"] "\n"
+exitStmt → "exit" "\n"
 
 expression → logic_or
 logic_or → logic_and ("or" logic_and)*

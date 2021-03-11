@@ -63,10 +63,9 @@ describe("scanner should return a list of token correctly with EOF at the end", 
   });
 
   test("exit statement", () => {
-    const input = `exit program`;
+    const input = `exit`;
     const expectedOutput = [
       new Token(TokenType.EXIT, "exit", null, 1),
-      new Token(TokenType.IDENTIFIER, "program", null, 1),
 
       new Token(TokenType.NEWLINE, "\n", null, 1),
       new Token(TokenType.EOF, "", null, 2),

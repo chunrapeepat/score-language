@@ -100,9 +100,7 @@ describe("parse statements", () => {
   });
 
   it("should parse exit statement correctly", () => {
-    const input = `
-      exit program
-    `;
+    const input = `exit`;
 
     const expectedOutput = [new ExitStatement()];
 

@@ -55,7 +55,7 @@ describe("translate the language to Javascript", () => {
   });
 
   it("should translate exit statement to JS correctly", () => {
-    const input = `exit program`;
+    const input = `exit`;
     const expectedOutput = `this.exitProgram();`;
 
     const scanner = new Scanner(input);
