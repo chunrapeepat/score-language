@@ -17,8 +17,7 @@ Score is a text-based programming language designed for blind and visually impai
 - No indentation and whitespace required
 
 ## Try it yourself!!
-
-![](https://i.ibb.co/3FFtw55/Clean-Shot-2564-03-11-at-20-05-18-2x.png)
+![](./editor-preview.png)
 
 1. Go to [The Score Programming Language Playground](https://score.thechun.dev)
 2. Let's start with this code and feel free to edit by yourself (and don't forget to turn audio on)
