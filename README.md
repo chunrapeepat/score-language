@@ -2,9 +2,9 @@
 
 <b>About: </b> Score is a text-based programming language designed for blind and visually impaired students as an educational tool to learn to code by building a game and music which targeted primarily on children at the age of 12 - 16 years old
 
-> Fun fact: Score (or an alternative term for "sheet music") is a handwritten or printed form of musical notation that uses musical symbols to indicate the pitches, rhythms, or chords of a song or instrumental musical piece
-
 ![](./editor-preview.png)
+
+> Fun fact: Score (or an alternative term for "sheet music") is a handwritten or printed form of musical notation that uses musical symbols to indicate the pitches, rhythms, or chords of a song or instrumental musical piece
 
 ### Why was "Score" developed?
 
