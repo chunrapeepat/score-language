@@ -128,10 +128,9 @@ export class Parser {
       "times",
       `expect 'times' keyword in 'while' statement.`
     );
-    this.consume(TokenType.THEN, `expect 'then' after 'while' statement`);
     this.consume(
       TokenType.NEWLINE,
-      `expect 'new line' after 'then' keyword in 'while' statement`
+      `expect 'new line' after an expression in 'while' statement`
     );
 
     this.allowBreakOrContinueStmt = true;
@@ -162,10 +161,9 @@ export class Parser {
 
   private whileStatement(): Stmt {
     const test: Expr = this.expression();
-    this.consume(TokenType.THEN, `expect 'then' after 'while' statement`);
     this.consume(
       TokenType.NEWLINE,
-      `expect 'new line' after 'then' keyword in 'while' statement`
+      `expect 'new line' after an expression in 'while' statement`
     );
 
     this.allowBreakOrContinueStmt = true;
@@ -212,10 +210,9 @@ export class Parser {
 
   private ifStatement(): Stmt {
     const test: Expr = this.expression();
-    this.consume(TokenType.THEN, `expect 'then' after 'if' statement`);
     this.consume(
       TokenType.NEWLINE,
-      `expect 'new line' after 'then' keyword in 'if' statement`
+      `expect 'new line' after an expression in 'if' statement`
     );
 
     const consequent: Stmt[] = [];

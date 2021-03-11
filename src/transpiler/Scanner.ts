@@ -134,7 +134,6 @@ export class Scanner {
     keywords["say"] = TokenType.SAY;
     keywords["print"] = TokenType.PRINT;
     keywords["if"] = TokenType.IF;
-    keywords["then"] = TokenType.THEN;
     keywords["else"] = TokenType.ELSE;
     keywords["end"] = TokenType.END;
     keywords["while"] = TokenType.WHILE;

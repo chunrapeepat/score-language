@@ -67,8 +67,8 @@ describe("translate the language to Javascript", () => {
 
   it("should translate while loop with break or continue statement correctly", () => {
     const input = `
-      while true then
-        if a < 10 then
+      while true 
+        if a < 10 
           continue
         else 
           break
@@ -87,7 +87,7 @@ describe("translate the language to Javascript", () => {
   it("should translate repeat statement to JS correctly", () => {
     const input = `
       var n = 10
-      repeat n times then
+      repeat n times 
         print n
       end
     `;
@@ -103,7 +103,7 @@ describe("translate the language to Javascript", () => {
   it("should translate while statement to JS correctly", () => {
     const input = `
       var a = 10
-      while a < 10 then
+      while a < 10 
         print a
         set a = a + 1
       end
@@ -119,9 +119,9 @@ describe("translate the language to Javascript", () => {
 
   it("should translate if-else with else-if statement to JS correctly", () => {
     const input = `
-      if a <= 3 then
+      if a <= 3 
         print "a is less than or equal to 3"
-      else if a >= 0 then
+      else if a >= 0 
         print "a is greater than 0"
       else
         print "a is less than 0 or greater than 3"
@@ -138,8 +138,8 @@ describe("translate the language to Javascript", () => {
 
   it("should translate if-else statement to JS correctly", () => {
     const input = `
-      if a <= 3 then
-        if a == 2 then
+      if a <= 3 
+        if a == 2 
           print "a is 2"
         end
       else
@@ -157,7 +157,7 @@ describe("translate the language to Javascript", () => {
 
   it("should translate if-else statement to JS correctly", () => {
     const input = `
-      if a <= 3 then
+      if a <= 3 
         print "a is less than or equal to 3"
       else
         print "a is greater than 3"
@@ -172,9 +172,9 @@ describe("translate the language to Javascript", () => {
     expect(printer.print(parser.parse())).toBe(expectedOutput);
   });
 
-  it("should translate if-then-end statement to JS correctly", () => {
+  it("should translate if statement to JS correctly", () => {
     const input = `
-      if a <= 3 then
+      if a <= 3 
         print "a is less than or equal to 3"
       end
     `;

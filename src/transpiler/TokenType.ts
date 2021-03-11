@@ -43,7 +43,6 @@ export enum TokenType {
   WAIT,
   PLAY,
   IF,
-  THEN,
   END,
   ELSE,
   WHILE,

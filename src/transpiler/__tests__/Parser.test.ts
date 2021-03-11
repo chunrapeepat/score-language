@@ -31,7 +31,7 @@ describe("parse error", () => {
   it("should parse error when use continue or break statement outside while and repeat", () => {
     const input = `
       break
-      repeat 10 times then
+      repeat 10 times 
         continue
       end
     `;
@@ -76,12 +76,12 @@ describe("parse error", () => {
 describe("parse statements", () => {
   it("should parse break and continue statements in repeat and while correctly", () => {
     const input = `
-      repeat 10 times then
+      repeat 10 times 
         continue
       end
 
-      while true then
-        if true then
+      while true 
+        if true 
           break
         end
       end
@@ -111,7 +111,7 @@ describe("parse statements", () => {
 
   it("should parse repeat statement correctly", () => {
     const input = `
-      repeat 10 times then
+      repeat 10 times 
         print "hello"
       end
     `;
@@ -129,7 +129,7 @@ describe("parse statements", () => {
 
   it("should parse while statement correctly", () => {
     const input = `
-      while true then
+      while true 
         print "infinite loop" 
       end
     `;
@@ -147,8 +147,8 @@ describe("parse statements", () => {
 
   it("should parse nested if-else statement correctly", () => {
     const input = `
-      if a <= 3 then
-        if a == 2 then
+      if a <= 3 
+        if a == 2 
           print "a is 2"
         end
       else
@@ -183,9 +183,9 @@ describe("parse statements", () => {
 
   it("should parse if-else with else-if statement correctly", () => {
     const input = `
-      if a <= 3 then
+      if a <= 3 
         print "a is less than or equal to 3"
-      else if a >= 0 then
+      else if a >= 0 
         print "a is greater than 0"
       else
         print "a is less than 0 or greater than 3"
@@ -222,7 +222,7 @@ describe("parse statements", () => {
 
   it("should parse if-else statement correctly", () => {
     const input = `
-      if a <= 3 then
+      if a <= 3 
         print "a is less than or equal to 3"
       else
         print "a is greater than 3"
@@ -247,7 +247,7 @@ describe("parse statements", () => {
 
   it("should parse if statement correctly", () => {
     const input = `
-      if a <= 3 then
+      if a <= 3 
         print "a is less than or equal to 3"
         set a = a + 1
       end
