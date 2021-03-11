@@ -229,9 +229,9 @@ breakStmt → "break" "\n"
 continueStmt → "continue" "\n"
 varStmt → "var" ID ("=" expression)? "\n"
 setStmt → "set" ID "=" expression "\n"
-sayStmt → "say" expression (ID["for"] expression ID["secs"])? "\n"
-waitStmt → "wait" expression ID["secs"] "\n"
-playStmt → "play" ID["note"] expression (ID["for"] expression ID["secs"])? "\n"
+sayStmt → "say" expression (ID["for"] expression (ID["secs"] | ID["s"]))? "\n"
+waitStmt → "wait" expression (ID["secs"] | ID["s"]) "\n"
+playStmt → "play" ID["note"] expression (ID["for"] expression (ID["secs"] | ID["s"]))? "\n"
 exitStmt → "exit" "\n"
 
 expression → logic_or

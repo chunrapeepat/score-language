@@ -282,12 +282,18 @@ describe("parse statements", () => {
     const input = `
       play note 3
       play note n for 2 secs
+      play note n for 2s
     `;
     const expectedOutput = [
       new PlayStatement("note", new Literal(3)),
       new PlayStatement(
         "note",
         new Variable(new Token(TokenType.IDENTIFIER, "n", null, 3)),
+        new Literal(2)
+      ),
+      new PlayStatement(
+        "note",
+        new Variable(new Token(TokenType.IDENTIFIER, "n", null, 4)),
         new Literal(2)
       ),
     ];

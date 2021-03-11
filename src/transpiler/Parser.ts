@@ -286,10 +286,12 @@ export class Parser {
     const value: Expr = this.expression();
     if (this.matchIdentifier("for")) {
       const duration: Expr = this.expression();
-      this.consumeIdentifier(
-        "secs",
-        `expect 'secs' keyword after 'play' statement`
-      );
+      if (!this.matchIdentifier("secs", "s")) {
+        throw this.error(
+          this.peek(),
+          `expect 'secs' or 's' keyword after 'for' in 'play' statement`
+        );
+      }
       return new PlayStatement("note", value, duration);
     }
     return new PlayStatement("note", value);
@@ -299,10 +301,12 @@ export class Parser {
     const value: Expr = this.expression();
     if (this.matchIdentifier("for")) {
       const duration: Expr = this.expression();
-      this.consumeIdentifier(
-        "secs",
-        `expect 'secs' keyword after 'say' statement`
-      );
+      if (!this.matchIdentifier("secs", "s")) {
+        throw this.error(
+          this.peek(),
+          `expect 'secs' or 's' keyword after 'for' in 'say' statement`
+        );
+      }
       return new SayStatement(value, duration);
     }
     return new SayStatement(value);
@@ -310,10 +314,12 @@ export class Parser {
 
   private waitStatement(): Stmt {
     const duration: Expr = this.expression();
-    this.consumeIdentifier(
-      "secs",
-      `expect 'secs' keyword after 'wait' statement`
-    );
+    if (!this.matchIdentifier("secs", "s")) {
+      throw this.error(
+        this.peek(),
+        `expect 'secs' or 's' keyword after 'wait' statement`
+      );
+    }
     return new WaitStatement(duration);
   }
 
