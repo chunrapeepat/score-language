@@ -1,8 +1,10 @@
 # The Score Programming Language
 
-Score is a text-based programming language designed for blind and visually impaired students as an educational tool to learn to code by building a game and music which targeted primarily on children at the age of 12 - 16 years old
+<b>About: </b> Score is a text-based programming language designed for blind and visually impaired students as an educational tool to learn to code by building a game and music which targeted primarily on children at the age of 12 - 16 years old
 
 > Fun fact: Score (or an alternative term for "sheet music") is a handwritten or printed form of musical notation that uses musical symbols to indicate the pitches, rhythms, or chords of a song or instrumental musical piece
+
+![](./editor-preview.png)
 
 ### Why was "Score" developed?
 
@@ -17,7 +19,6 @@ Score is a text-based programming language designed for blind and visually impai
 - No indentation and whitespace required
 
 ## Try it yourself!!
-![](./editor-preview.png)
 
 1. Go to [The Score Programming Language Playground](https://score.thechun.dev)
 2. Let's start with this code and feel free to edit by yourself (and don't forget to turn audio on)
