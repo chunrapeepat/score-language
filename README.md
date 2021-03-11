@@ -31,7 +31,7 @@ while n <= 14
 end
 ```
 
-3. Press `shift + enter` to run the code, or you can also hit the "RUN CODE" button on the top-right of the screen
+3. Press `shift + enter` to run, or you can also hit the "RUN CODE" button on the top-right of the screen
 4. See the result :)
 
 ## Language Features
