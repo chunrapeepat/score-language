@@ -76,7 +76,7 @@ var msg = "hello " + name
 
 ```
 var a = true and false
-var b = true of false
+var b = true or false
 var c = not true
 ```
 
